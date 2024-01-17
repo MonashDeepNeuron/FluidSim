@@ -1,5 +1,4 @@
-#ifndef EVENT_MANAGER_H
-#define EVENT_MANAGER_H
+#pragma once
 
 #include <SFML/Window/Event.hpp>
 #include <iostream>
@@ -33,5 +32,3 @@ public:
     }
   }
 };
-
-#endif // EVENT_MANAGER_H

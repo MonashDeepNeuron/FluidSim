@@ -1,4 +1,4 @@
-#include "eventManger.hpp"
+#include "event_manager.hpp"
 #include "gui.hpp"
 
 // Define macro for converting 2D array coordinates into 1D

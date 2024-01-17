@@ -1,5 +1,5 @@
-#ifndef GUI_HPP
-#define GUI_HPP
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -43,4 +43,3 @@ public:
 
   bool is_open() { return window.isOpen(); }
 };
-#endif // GUI_HPP
