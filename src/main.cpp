@@ -1,4 +1,5 @@
-#include <SFML/Graphics.hpp>
+#include "event_manager.hpp"
+#include "gui.hpp"
 
 // Define macro for converting 2D array coordinates into 1D
 #define IX(i, j) ((i) + (N + 2) * (j))
@@ -16,17 +17,23 @@ class Fluid {
 };
 
 int main() {
-  auto window = sf::RenderWindow{{1920u, 1080u}, "CMake SFML Project"};
-  window.setFramerateLimit(144);
 
-  while (window.isOpen()) {
-    for (auto event = sf::Event{}; window.pollEvent(event);) {
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
-    }
+  /*
+  main tells gui about the fluids, and asks it for events
+  gui draws the fluids, and tells main about events
+  main gives those events to event manager
+  event manager changes the fluids based on events
+  events manager tells main about the changes to fluids
+  repeat
+  */
 
-    window.clear();
-    window.display();
+  gui fluid_gui = gui();
+  event_manager my_event_manager = event_manager();
+
+  while (fluid_gui.is_open()) {
+    sf::Event event = fluid_gui.check_event();
+    my_event_manager.handle_event(event);
+    fluid_gui.update_display();
   }
+  return 0;
 }
