@@ -36,16 +36,17 @@ public:
     return event;
   }
 
-  void update_display() {
+  void update_display(
+      const std::function<void(sf::RenderWindow &,
+                               const std::vector<std::vector<float>> &)>
+          &drawFunction,
+      const std::vector<std::vector<float>> &data) {
     window.clear();
+    drawFunction(window, data);
     window.display();
   }
 
   bool is_open() { return window.isOpen(); }
 
-
-  sf::RenderWindow& getRenderWindow() {
-    return window;
-  }
-  
+  sf::RenderWindow &getRenderWindow() { return window; }
 };

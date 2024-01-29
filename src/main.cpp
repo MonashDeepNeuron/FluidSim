@@ -2,6 +2,8 @@
 #include "gui.hpp"
 #include <array>
 
+// ./build/bin/CMakeSFMLProject
+
 // Define macro for converting 2D array coordinates into 1D
 #define IX(i, j) ((i) + (N + 2) * (j))
 
@@ -17,41 +19,41 @@ class Fluid {
   float dt, diff, visc;
 };
 
-
 /*
 This function takes in a density-matrix with values from 0-1 and converts each
 value in the matrix to a value from 0-255 then prints it on a single pixel in
 an SFML window
 */
 
-void GreyScaleMatrixToSFML(sf::RenderWindow& window, const std::vector<std::vector<float>>& densityArray) {
-    for (int i = 0; i < densityArray.size(); i++) {
-        for (int j = 0; j < densityArray[i].size(); j++) {
-            sf::RectangleShape pixel(sf::Vector2f(1, 1));
-            pixel.setPosition(i, j);
-            pixel.setFillColor(sf::Color(densityArray[i][j]*255, densityArray[i][j]*255, densityArray[i][j]*255));
-            window.draw(pixel);
-        }
+void GreyScaleMatrixToSFML(
+    sf::RenderWindow &window,
+    const std::vector<std::vector<float>> &densityArray) {
+  for (int i = 0; i < densityArray.size(); i++) {
+    for (int j = 0; j < densityArray[i].size(); j++) {
+      sf::RectangleShape pixel(sf::Vector2f(1, 1));
+      pixel.setPosition(i, j);
+      pixel.setFillColor(sf::Color(densityArray[i][j] * 255,
+                                   densityArray[i][j] * 255,
+                                   densityArray[i][j] * 255));
+      window.draw(pixel);
     }
+  }
 }
-
-
 
 int main() {
 
-    // This is a dummy matrix just used for testing functionality
-    std::vector<std::vector<float>> densityArray = {
-        {0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f},
-        {0.6f, 0.3f, 0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f},
-        {0.4f, 0.7f, 0.2f, 0.9f, 0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f},
-        {0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f, 0.3f, 0.6f, 0.4f, 0.2f},
-        {0.5f, 0.6f, 0.1f, 0.7f, 0.4f, 0.2f, 0.9f, 0.8f, 0.3f, 0.5f},
-        {0.1f, 0.4f, 0.9f, 0.2f, 0.8f, 0.7f, 0.5f, 0.3f, 0.6f, 0.9f},
-        {0.8f, 0.5f, 0.3f, 0.6f, 0.9f, 0.4f, 0.7f, 0.2f, 0.1f, 0.8f},
-        {0.3f, 0.9f, 0.6f, 0.4f, 0.2f, 0.5f, 0.1f, 0.8f, 0.7f, 0.4f},
-        {0.7f, 0.1f, 0.4f, 0.8f, 0.6f, 0.3f, 0.2f, 0.9f, 0.5f, 0.1f},
-        {0.2f, 0.3f, 0.5f, 0.1f, 0.7f, 0.9f, 0.6f, 0.4f, 0.8f, 0.3f}
-    };
+  // This is a dummy matrix just used for testing functionality
+  std::vector<std::vector<float>> densityArray = {
+      {0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f},
+      {0.6f, 0.3f, 0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f},
+      {0.4f, 0.7f, 0.2f, 0.9f, 0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f},
+      {0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f, 0.3f, 0.6f, 0.4f, 0.2f},
+      {0.5f, 0.6f, 0.1f, 0.7f, 0.4f, 0.2f, 0.9f, 0.8f, 0.3f, 0.5f},
+      {0.1f, 0.4f, 0.9f, 0.2f, 0.8f, 0.7f, 0.5f, 0.3f, 0.6f, 0.9f},
+      {0.8f, 0.5f, 0.3f, 0.6f, 0.9f, 0.4f, 0.7f, 0.2f, 0.1f, 0.8f},
+      {0.3f, 0.9f, 0.6f, 0.4f, 0.2f, 0.5f, 0.1f, 0.8f, 0.7f, 0.4f},
+      {0.7f, 0.1f, 0.4f, 0.8f, 0.6f, 0.3f, 0.2f, 0.9f, 0.5f, 0.1f},
+      {0.2f, 0.3f, 0.5f, 0.1f, 0.7f, 0.9f, 0.6f, 0.4f, 0.8f, 0.3f}};
 
   /*
   main tells gui about the fluids, and asks it for events
@@ -68,14 +70,14 @@ int main() {
   while (fluid_gui.is_open()) {
     sf::Event event = fluid_gui.check_event();
     my_event_manager.handle_event(event);
-    fluid_gui.update_display();
 
     /*
-    For my function below, should this be outside the scope of the event handling given we know it will
-    run every loop that the window is open as it needs to print the matrix to the screen 
-    */
-    GreyScaleMatrixToSFML(fluid_gui.getRenderWindow(), densityArray);
+    The update display is acting as a final step to display changes to fluid
+    on every itteration on the loop
 
+    we can pass in different drawing functions as the project grows
+    */
+    fluid_gui.update_display(GreyScaleMatrixToSFML, densityArray);
   }
   return 0;
 }
