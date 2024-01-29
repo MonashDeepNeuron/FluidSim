@@ -35,14 +35,12 @@ public:
     }
     return event;
   }
-
+  template <typename DrawFunction>
   void update_display(
-      const std::function<void(sf::RenderWindow &,
-                               const std::vector<std::vector<float>> &)>
-          &drawFunction,
+     DrawFunction draw_function,
       const std::vector<std::vector<float>> &data) {
     window.clear();
-    drawFunction(window, data);
+    draw_function(window, data);
     window.display();
   }
 
