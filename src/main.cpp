@@ -30,8 +30,8 @@ void GreyScaleMatrixToSFML(
     const std::vector<std::vector<float>> &densityArray) {
   for (int i = 0; i < densityArray.size(); i++) {
     for (int j = 0; j < densityArray[i].size(); j++) {
-      sf::RectangleShape pixel(sf::Vector2f(1, 1));
-      pixel.setPosition(i, j);
+      sf::RectangleShape pixel(sf::Vector2f(25, 25));
+      pixel.setPosition(i * 25, j * 25);
       pixel.setFillColor(sf::Color(densityArray[i][j] * 255,
                                    densityArray[i][j] * 255,
                                    densityArray[i][j] * 255));
