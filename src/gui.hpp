@@ -7,11 +7,11 @@
 
 class gui {
 private:
-  sf::RenderWindow window;
   const int screen_width = 250;
   const int screen_height = 250;
   const int frame_limit = 144;
   const std::string window_text = "Fluid Simulation";
+  sf::RenderWindow window;
 
 public:
   gui() : window(sf::VideoMode(screen_width, screen_height), window_text) {
