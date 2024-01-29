@@ -64,20 +64,21 @@ int main() {
   repeat
   */
 
-  gui fluid_gui = gui();
-  event_manager my_event_manager = event_manager();
+  gui fluid_gui;
 
+  // Create an event manager and pass the GUI window to its constructor
+  event_manager my_event_manager(fluid_gui);
+
+  // Main loop
   while (fluid_gui.is_open()) {
+    // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
-    my_event_manager.handle_event(event,fluid_gui);
+    my_event_manager.handle_event(event);
 
-    /*
-    The update display is acting as a final step to display changes to fluid
-    on every itteration on the loop
-
-    we can pass in different drawing functions as the project grows
-    */
+    // Update the display
     fluid_gui.update_display(GreyScaleMatrixToSFML, densityArray);
   }
+
   return 0;
+
 }
