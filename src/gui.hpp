@@ -42,4 +42,10 @@ public:
   }
 
   bool is_open() { return window.isOpen(); }
+
+
+  sf::RenderWindow& getRenderWindow() {
+    return window;
+  }
+  
 };
