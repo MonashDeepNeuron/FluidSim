@@ -11,14 +11,6 @@
 constexpr int N = 100;
 constexpr int SIZE = (N + 2) * (N + 2);
 
-// TODO: Define fluid class
-/* This class will contain all the variables and methods necessary to solve
-    the Navier-Stokes equation for both density and velocity. */
-class Fluid {
-  std::vector<float> u, v, u_prev, v_prev, dens, dens_prev;
-  float dt, diff, visc;
-};
-
 /*
 This function takes in a density-matrix with values from 0-1 and converts each
 value in the matrix to a value from 0-255 then prints it on a single pixel in
@@ -28,13 +20,15 @@ an SFML window
 void GreyScaleMatrixToSFML(
     sf::RenderWindow &window,
     const std::vector<std::vector<float>> &densityArray) {
-  for (int i = 0; i < densityArray.size(); i++) {
-    for (int j = 0; j < densityArray[i].size(); j++) {
+  for (uint16_t i = 0; i < static_cast<uint16_t>(densityArray.size()); i++) {
+    for (uint16_t j = 0; j < static_cast<uint16_t>(densityArray[i].size());
+         j++) {
       sf::RectangleShape pixel(sf::Vector2f(25, 25));
       pixel.setPosition(i * 25, j * 25);
-      pixel.setFillColor(sf::Color(densityArray[i][j] * 255,
-                                   densityArray[i][j] * 255,
-                                   densityArray[i][j] * 255));
+      pixel.setFillColor(sf::Color(
+          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255)),
+          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255)),
+          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255))));
       window.draw(pixel);
     }
   }
