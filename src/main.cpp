@@ -75,10 +75,14 @@ int main() {
     sf::Event event = fluid_gui.check_event();
     my_event_manager.handle_event(event);
 
-    // Update the display
+    /*
+    The update display is acting as a final step to display changes to fluid
+    on every itteration on the loop
+
+    we can pass in different drawing functions as the project grows
+    */
     fluid_gui.update_display(GreyScaleMatrixToSFML, densityArray);
   }
 
   return 0;
-
 }
