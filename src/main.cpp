@@ -11,21 +11,6 @@
 constexpr int N = 100;
 constexpr int SIZE = (N + 2) * (N + 2);
 
-// TODO: Define fluid class
-/* This class will contain all the variables and methods necessary to solve
-    the Navier-Stokes equation for both density and velocity. */
-class Fluid {
-  std::vector<float> u;
-  std::vector<float> v;
-  std::vector<float> u_prev;
-  std::vector<float> v_prev;
-  std::vector<float> dens;
-  std::vector<float> dens_prev;
-  float dt;
-  float diff;
-  float visc;
-};
-
 /*
 This function takes in a density-matrix with values from 0-1 and converts each
 value in the matrix to a value from 0-255 then prints it on a single pixel in
