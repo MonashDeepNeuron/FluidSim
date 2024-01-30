@@ -35,6 +35,7 @@ public:
     }
     return event;
   }
+
   template <typename DrawFunction>
   void update_display(DrawFunction draw_function,
                       const std::vector<std::vector<float>> &data) {
