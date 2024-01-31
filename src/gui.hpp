@@ -7,11 +7,11 @@
 
 class gui {
 private:
-  sf::RenderWindow window;
-  const int screen_width = 250;
-  const int screen_height = 250;
-  const int frame_limit = 144;
+  static constexpr int screen_width = 250;
+  static constexpr int screen_height = 250;
+  static constexpr int frame_limit = 144;
   const std::string window_text = "Fluid Simulation";
+  sf::RenderWindow window;
 
 public:
   gui() : window(sf::VideoMode(screen_width, screen_height), window_text) {
@@ -36,10 +36,15 @@ public:
     return event;
   }
 
-  void update_display() {
+  template <typename DrawFunction>
+  void update_display(DrawFunction draw_function,
+                      const std::vector<std::vector<float>> &data) {
     window.clear();
+    draw_function(window, data);
     window.display();
   }
 
   bool is_open() { return window.isOpen(); }
+
+  sf::RenderWindow &getRenderWindow() { return window; }
 };
