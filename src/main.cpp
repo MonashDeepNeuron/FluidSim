@@ -1,5 +1,6 @@
-#include "event_manager.hpp"
-#include "gui.hpp"
+#include "../headers/event_manager.hpp"
+#include "../headers/gui.hpp"
+#include "../headers/matrix_change.hpp"
 #include <array>
 
 // ./build/bin/CMakeSFMLProject

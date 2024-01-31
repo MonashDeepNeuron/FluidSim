@@ -1,6 +1,6 @@
+#include "../headers/matrix_change.hpp"
 #include <iostream>
 #include <vector>
-
 // Define grid parameters
 const int N = 20;
 const int size = (N + 2) * (N + 2);
