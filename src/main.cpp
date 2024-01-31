@@ -11,18 +11,18 @@ value in the matrix to a value from 0-255 then prints it on a single pixel in
 an SFML window
 */
 
-void GreyScaleMatrixToSFML(
-    sf::RenderWindow &window,
-    const std::vector<std::vector<float>> &densityArray) {
-  for (uint16_t i = 0; i < static_cast<uint16_t>(densityArray.size()); i++) {
-    for (uint16_t j = 0; j < static_cast<uint16_t>(densityArray[i].size());
-         j++) {
+void GreyScaleMatrixToSFML(sf::RenderWindow &window,
+                           const std::vector<float> &densityArray) {
+  for (int i = 1; i <= N + 2; i++) {
+    for (int j = 1; j <= N + 2; j++) {
+
       sf::RectangleShape pixel(sf::Vector2f(25, 25));
-      pixel.setPosition(i * 25, j * 25);
-      pixel.setFillColor(sf::Color(
-          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255)),
-          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255)),
-          static_cast<sf::Uint8>(densityArray[i][j] * sf::Uint8(255))));
+      pixel.setPosition((i * 25) - 25, (j * 25) - 25);
+      pixel.setFillColor(
+          sf::Color(static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
+                    static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
+                    static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255)));
+
       window.draw(pixel);
     }
   }
@@ -30,18 +30,16 @@ void GreyScaleMatrixToSFML(
 
 int main() {
 
-  // This is a dummy matrix just used for testing functionality
-  std::vector<std::vector<float>> densityArray = {
-      {0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f},
-      {0.6f, 0.3f, 0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f},
-      {0.4f, 0.7f, 0.2f, 0.9f, 0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f},
-      {0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f, 0.3f, 0.6f, 0.4f, 0.2f},
-      {0.5f, 0.6f, 0.1f, 0.7f, 0.4f, 0.2f, 0.9f, 0.8f, 0.3f, 0.5f},
-      {0.1f, 0.4f, 0.9f, 0.2f, 0.8f, 0.7f, 0.5f, 0.3f, 0.6f, 0.9f},
-      {0.8f, 0.5f, 0.3f, 0.6f, 0.9f, 0.4f, 0.7f, 0.2f, 0.1f, 0.8f},
-      {0.3f, 0.9f, 0.6f, 0.4f, 0.2f, 0.5f, 0.1f, 0.8f, 0.7f, 0.4f},
-      {0.7f, 0.1f, 0.4f, 0.8f, 0.6f, 0.3f, 0.2f, 0.9f, 0.5f, 0.1f},
-      {0.2f, 0.3f, 0.5f, 0.1f, 0.7f, 0.9f, 0.6f, 0.4f, 0.8f, 0.3f}};
+  std::vector<float> densityArray = {
+      0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f, 0.6f, 0.3f,
+      0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f, 0.4f, 0.7f, 0.2f, 0.9f,
+      0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f, 0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f,
+      0.3f, 0.6f, 0.4f, 0.2f, 0.5f, 0.6f, 0.1f, 0.7f, 0.4f, 0.2f, 0.9f, 0.8f,
+      0.3f, 0.5f, 0.1f, 0.4f, 0.9f, 0.2f, 0.8f, 0.7f, 0.5f, 0.3f, 0.6f, 0.9f,
+      0.8f, 0.5f, 0.3f, 0.6f, 0.9f, 0.4f, 0.7f, 0.2f, 0.1f, 0.8f, 0.3f, 0.9f,
+      0.6f, 0.4f, 0.2f, 0.5f, 0.1f, 0.8f, 0.7f, 0.4f, 0.7f, 0.1f, 0.4f, 0.8f,
+      0.6f, 0.3f, 0.2f, 0.9f, 0.5f, 0.1f, 0.2f, 0.3f, 0.5f, 0.1f, 0.7f, 0.9f,
+      0.6f, 0.4f, 0.8f, 0.3f};
 
   /*
   main tells gui about the fluids, and asks it for events
