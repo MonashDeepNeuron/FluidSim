@@ -3,15 +3,11 @@
 #include <vector>
 
 // Define single-dimensional arrays for velocity and density
-float u[size] = {0.0};
-float v[size] = {0.0};
-float x[size] = {0.0};
-float x0[size] = {0.0};
 
 //=============================================================================
 
-void addSource(int N, float *x, const float *s, float dt) {
-  int size = (N + 2) * (N + 2);
+void add_source(std::array<float, size> x, const std::array<float, size> &s,
+                float dt) {
   for (int i = 0; i < size; ++i) {
     x[i] += dt * s[i];
     if (x[i] > 1) {
@@ -23,17 +19,18 @@ void addSource(int N, float *x, const float *s, float dt) {
 //================================================================================
 
 // Function to set boundary conditions
-void set_bnd(int N, int b, float *x) {
+void set_bnd(int N, int b, std::array<float, size> &x) {
   // Implementation of setting boundary conditions goes here
   // Replace with your specific implementation
 }
 
 //==================================================================================
 
-void diffuse(int N, int b, float *x, const float *x0, float diff, float dt) {
+void diffuse(int N, int b, std::array<float, size> x,
+             const std::array<float, size> &x0, float diff, float dt) {
   float a = dt * diff * N * N;
 
-  for (int k = 0; k < diffuseChanger; k++) {
+  for (int k = 0; k < diffuse_changer; k++) {
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
         int index = i + N * j;
@@ -48,8 +45,9 @@ void diffuse(int N, int b, float *x, const float *x0, float diff, float dt) {
 
 //==============================================================================
 
-void advect(int N, int b, float *d, const float *d0, const float *u,
-            const float *v, float dt) {
+void advect(int N, int b, std::array<float, size> d,
+            const std::array<float, size> &d0, const std::array<float, size> &u,
+            const std::array<float, size> &v, float dt) {
   float dt0 = dt * N;
 
   for (int i = 1; i <= N; i++) {
@@ -81,9 +79,10 @@ void advect(int N, int b, float *d, const float *d0, const float *u,
 
 //========================================================================
 
-void dens_step(int N, float *x, float *x0, float *u, float *v, float diff,
-               float dt) {
-  addSource(N, x, x0, dt);
+void dens_step(int N, std::array<float, size> x, std::array<float, size> x0,
+               std::array<float, size> &u, std::array<float, size> &v,
+               float diff, float dt) {
+  add_source(x, x0, dt);
   SWAP(x0, x);
   diffuse(N, 0, x, x0, diff, dt);
   SWAP(x0, x);
@@ -92,7 +91,7 @@ void dens_step(int N, float *x, float *x0, float *u, float *v, float diff,
 
 //==================================================================================
 
-void testDisplay(int N, float *x, int k) {
+void test_display(int N, std::array<float, size> x, int k) {
   std::cout << " Iteration " << k << "\n";
   for (int i = 1; i <= N; ++i) {
     for (int j = 1; j <= N; ++j) {
@@ -106,9 +105,14 @@ void testDisplay(int N, float *x, int k) {
 
 //=====================================================================================
 
-int _main() {
+void __main__() {
 
-  // Initializing arrays: example test initialisation
+  std::array<float, size> u = {0.0};
+  std::array<float, size> v = {0.0};
+  std::array<float, size> x = {0.0};
+  std::array<float, size> x0 = {0.0};
+
+  // Initializing arrays: example test initialization
   for (int i = 0; i < size; ++i) {
     u[i] = 0.5;
     v[i] = 0.5;
@@ -118,22 +122,21 @@ int _main() {
   float dt = 0.9;   // Replace with your time step
 
   // first display
-  testDisplay(N, x, 0);
+  test_display(N, x, 0);
 
   for (int i = 0; i < iterations; ++i) {
 
-    // reinitialise x0 to have just a single source location to add.
+    // reinitialize x0 to have just a single source location to add.
     for (int k = 0; k < size; ++k) {
       x0[k] = 0.0;
     }
+
     x0[31] = 0.9;
 
     // Call the dens_step function
     dens_step(N, x, x0, u, v, diff, dt);
 
     // Output the result
-    testDisplay(N, x, i);
+    test_display(N, x, i);
   }
-
-  return 0;
 }
