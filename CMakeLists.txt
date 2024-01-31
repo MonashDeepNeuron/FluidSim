@@ -11,9 +11,13 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 
+add_library(lib OBJECT src/matrix_change.cpp)
+target_link_libraries(lib PRIVATE sfml-graphics)
+
 add_executable(CMakeSFMLProject src/main.cpp)
 target_include_directories(CMakeSFMLProject PRIVATE headers)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics)
+target_link_libraries(CMakeSFMLProject PRIVATE lib)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_17)
 
 if(WIN32)

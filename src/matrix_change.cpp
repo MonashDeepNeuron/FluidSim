@@ -1,30 +1,12 @@
 #include "../headers/matrix_change.hpp"
 #include <iostream>
 #include <vector>
-// Define grid parameters
-const int N = 20;
-const int size = (N + 2) * (N + 2);
 
 // Define single-dimensional arrays for velocity and density
 float u[size] = {0.0};
 float v[size] = {0.0};
 float x[size] = {0.0};
 float x0[size] = {0.0};
-
-// Macro for indexing
-#define IX(i, j) ((i) + (N + 2) * (j))
-// macro for switching array pointers
-#define SWAP(x0, x)                                                            \
-  {                                                                            \
-    float *tmp = x0;                                                           \
-    x0 = x;                                                                    \
-    x = tmp;                                                                   \
-  }
-
-// Define how many testing example iterations you want
-const int iterations = 3;
-// temporary changer of diffusion amount to visualise easier
-const int diffuseChanger = 5;
 
 //=============================================================================
 
@@ -124,7 +106,7 @@ void testDisplay(int N, float *x, int k) {
 
 //=====================================================================================
 
-int main() {
+int _main() {
 
   // Initializing arrays: example test initialisation
   for (int i = 0; i < size; ++i) {

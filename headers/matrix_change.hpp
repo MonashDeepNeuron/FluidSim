@@ -1,5 +1,4 @@
-#ifndef FLUIDSIMULATION_H
-#define FLUIDSIMULATION_H
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -37,5 +36,3 @@ void advect(int N, int b, float *d, const float *d0, const float *u,
 void dens_step(int N, float *x, float *x0, float *u, float *v, float diff,
                float dt);
 void testDisplay(int N, float *x, int k);
-
-#endif // FLUIDSIMULATION_H

@@ -5,13 +5,6 @@
 
 // ./build/bin/CMakeSFMLProject
 
-// Define macro for converting 2D array coordinates into 1D
-#define IX(i, j) ((i) + (N + 2) * (j))
-
-// Define grid size
-constexpr int N = 100;
-constexpr int SIZE = (N + 2) * (N + 2);
-
 /*
 This function takes in a density-matrix with values from 0-1 and converts each
 value in the matrix to a value from 0-255 then prints it on a single pixel in
