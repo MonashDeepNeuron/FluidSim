@@ -60,8 +60,8 @@ int main() {
 
   // Main loop
   DensitySolver<SIZE> ds(0.01, 0.9);
-  ds.add_density(1, 53);
 
+  ds.add_density(1, 53); // Can be move into the loop
   while (fluid_gui.is_open()) {
     // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
@@ -74,10 +74,9 @@ int main() {
     we can pass in different drawing functions as the project grows
     */
 
-    // (diff, dt)
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
-    ds.test_display();
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    ds.test_display();
     ds.dens_step();
   }
 

@@ -21,17 +21,9 @@ public:
       d = 1;
     }
     x0_[index] = d;
+    // Remove add_source from dens_step to here so display can properly see the
+    // addition of the source before being diffused.
     add_source();
-  }
-
-  std::array<float, SIZE> run() {
-    // First display
-
-    // Call the dens_step function
-    dens_step();
-    test_display();
-
-    return x;
   }
 
   void dens_step() {
@@ -57,8 +49,7 @@ private:
   int size_;
   float diff_;
   float dt_;
-  int diffuse_changer = 10;
-  int iterations = 10;
+  int diffuse_changer = 20;
   std::array<float, S> u_;
   std::array<float, S> v_;
   std::array<float, S> x0_;
@@ -80,7 +71,7 @@ private:
   void diffuse() {
     float a = dt_ * diff_ * N * N;
 
-    for (int k = 0; k < diffuse_changer; k++) {
+    for (int k = 0; k < 20; k++) {
       for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
           x[IX(i, j)] =
