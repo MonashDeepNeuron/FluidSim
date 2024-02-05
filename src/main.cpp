@@ -2,6 +2,7 @@
 #include "../headers/gui.hpp"
 #include "../headers/matrix_change.hpp"
 #include <array>
+#include <unistd.h>
 
 // ./build/bin/CMakeSFMLProject
 
@@ -12,12 +13,12 @@ an SFML window
 */
 
 void GreyScaleMatrixToSFML(sf::RenderWindow &window,
-                           const std::vector<float> &densityArray) {
-  for (int i = 1; i <= N + 2; i++) {
-    for (int j = 1; j <= N + 2; j++) {
+                           const std::array<float, size> &densityArray) {
+  for (int i = 0; i < N + 2; i++) {
+    for (int j = 0; j < N + 2; j++) {
 
-      sf::RectangleShape pixel(sf::Vector2f(25, 25));
-      pixel.setPosition((i * 25) - 25, (j * 25) - 25);
+      sf::RectangleShape pixel(sf::Vector2f(50, 50));
+      pixel.setPosition((i * 50), (j * 50));
       pixel.setFillColor(
           sf::Color(static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
                     static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
@@ -30,7 +31,7 @@ void GreyScaleMatrixToSFML(sf::RenderWindow &window,
 
 int main() {
 
-  std::vector<float> densityArray = {
+  std::array<float, size> densityArray = {
       0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f, 0.6f, 0.3f,
       0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f, 0.4f, 0.7f, 0.2f, 0.9f,
       0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f, 0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f,
@@ -55,6 +56,8 @@ int main() {
   // Create an event manager and pass the GUI window to its constructor
   event_manager my_event_manager(fluid_gui);
 
+  std::array<float, size> x = {0.0};
+
   // Main loop
   while (fluid_gui.is_open()) {
     // Check for events and handle them
@@ -67,7 +70,12 @@ int main() {
 
     we can pass in different drawing functions as the project grows
     */
-    fluid_gui.update_display(GreyScaleMatrixToSFML, densityArray);
+
+    // reinitialize x0 to have just a single source location to add.
+    x = run(x);
+    sleep(1);
+
+    fluid_gui.update_display(GreyScaleMatrixToSFML, x);
   }
 
   return 0;

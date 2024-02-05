@@ -5,7 +5,7 @@
 #include <cmath> // Include cmath for floor function
 #include <iostream>
 
-constexpr int CELL_SIZE = 25; // Adjust the value as needed
+// Adjust the value as needed
 
 class event_manager {
 private:

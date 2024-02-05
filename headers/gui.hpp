@@ -1,14 +1,16 @@
 #pragma once
 
+#include "matrix_change.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <tuple>
 
+constexpr int CELL_SIZE = 50;
 class gui {
 private:
-  static constexpr int screen_width = 250;
-  static constexpr int screen_height = 250;
+  static constexpr int screen_width = N * CELL_SIZE;
+  static constexpr int screen_height = N * CELL_SIZE;
   static constexpr int frame_limit = 144;
   const std::string window_text = "Fluid Simulation";
   sf::RenderWindow window;
@@ -38,7 +40,7 @@ public:
 
   template <typename DrawFunction>
   void update_display(DrawFunction draw_function,
-                      const std::vector<float> &data) {
+                      const std::array<float, size> &data) {
     window.clear();
     draw_function(window, data);
     window.display();
