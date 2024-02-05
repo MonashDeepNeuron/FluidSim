@@ -8,8 +8,8 @@
 
 class gui {
 private:
-  static constexpr int screen_width = N * CELL_SIZE;
-  static constexpr int screen_height = N * CELL_SIZE;
+  static constexpr int screen_width = (N + 2) * CELL_SIZE;
+  static constexpr int screen_height = (N + 2) * CELL_SIZE;
   static constexpr int frame_limit = 144;
   const std::string window_text = "Fluid Simulation";
   sf::RenderWindow window;

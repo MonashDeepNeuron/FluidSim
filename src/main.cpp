@@ -17,7 +17,7 @@ an SFML window
 void GreyScaleMatrixToSFML(sf::RenderWindow &window,
                            const std::array<float, SIZE> &densityArray) {
   for (int i = 0; i < N + 2; i++) {
-    for (int j = 0; j < N + 2; j++) {
+    for (int j = 0; j <= N + 2; j++) {
 
       sf::RectangleShape pixel(sf::Vector2f(50, 50));
       pixel.setPosition((j * 50), (i * 50));
