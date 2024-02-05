@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gui.hpp"
-#include <SFML/Window/Event.hpp>
 #include <cmath> // Include cmath for floor function
 #include <iostream>
 

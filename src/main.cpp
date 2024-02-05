@@ -71,8 +71,10 @@ int main() {
     we can pass in different drawing functions as the project grows
     */
 
-    // reinitialize x0 to have just a single source location to add.
-    x = run(x);
+    // (size, diff, dt)
+    FluidSimulator density_sim(size, 0.1, 0.9);
+    density_sim.run();
+    // x = run(x);
     sleep(1);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, x);
