@@ -59,23 +59,35 @@ int main() {
   event_manager my_event_manager(fluid_gui);
 
   // Main loop
-  DensitySolver<SIZE> ds(0.01, 0.9);
+  DensitySolver<SIZE> ds(0.007, 0.1);
 
-  ds.add_density(1, 53); // Can be move into the loop
+  // Example of one mouse click event
+  // ds.add_density(1, 53);
+
+  // Example of a mouse drag event
+  // ds.add_density(1, 53);
+  // ds.add_density(1, 54);
+  // ds.add_density(1, 55);
+  // ds.add_density(1, 56);
+  // ds.add_density(1, 57);
+  // ds.add_density(1, 58);
+  // ds.add_density(1, 59);
+  // ds.add_density(1, 60);
+  // ds.add_density(1, 61);
+
   while (fluid_gui.is_open()) {
     // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
     my_event_manager.handle_event(event);
 
-    /*
-    The update display is acting as a final step to display changes to fluid
-    on every itteration on the loop
-
-    we can pass in different drawing functions as the project grows
-    */
+    // An example of three mouse presses at three individual spots across an
+    // even velocity grid
+    ds.add_density(1, 142);
+    ds.add_density(1, 289);
+    ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     ds.test_display();
     ds.dens_step();
   }
