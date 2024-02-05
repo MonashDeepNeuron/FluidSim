@@ -58,11 +58,9 @@ int main() {
   // Create an event manager and pass the GUI window to its constructor
   event_manager my_event_manager(fluid_gui);
 
-  std::array<float, SIZE> x = {0.0};
-
   // Main loop
-  DensitySolver<SIZE> density_sim(0.1, 0.9);
-  density_sim.add_density(1, 53);
+  DensitySolver<SIZE> ds(0.01, 0.9);
+  ds.add_density(1, 53);
 
   while (fluid_gui.is_open()) {
     // Check for events and handle them
@@ -77,10 +75,10 @@ int main() {
     */
 
     // (diff, dt)
-    fluid_gui.update_display(GreyScaleMatrixToSFML, x);
+    fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
+    ds.test_display();
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    density_sim.dens_step();
-    density_sim.test_display();
+    ds.dens_step();
   }
 
   return 0;

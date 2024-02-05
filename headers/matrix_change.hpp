@@ -13,7 +13,7 @@ public:
   std::array<float, S> x;
 
   DensitySolver(float diff, float dt)
-      : size_(SIZE), diff_(diff), dt_(dt), u_{0.5f}, v_{0.5f}, x{0.0f},
+      : size_(SIZE), diff_(diff), dt_(dt), u_{0.01f}, v_{0.01f}, x{0.0f},
         x0_{0.0f} {}
 
   void add_density(float d, int index) {
@@ -102,17 +102,17 @@ private:
         float b = j - dt0 * v_[IX(i, j)];
 
         // Clamp values to ensure they stay within bounds
-        x = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, a));
-        y = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, b));
+        a = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, a));
+        b = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, b));
 
-        int i0 = static_cast<int>(x);
+        int i0 = static_cast<int>(a);
         int i1 = i0 + 1;
-        int j0 = static_cast<int>(y);
+        int j0 = static_cast<int>(b);
         int j1 = j0 + 1;
 
-        float s1 = x - i0;
+        float s1 = a - i0;
         float s0 = 1 - s1;
-        float t1 = y - j0;
+        float t1 = b - j0;
         float t0 = 1 - t1;
 
         x[IX(i, j)] = s0 * (t0 * x0_[IX(i0, j0)] + t1 * x0_[IX(i0, j1)]) +
@@ -122,3 +122,4 @@ private:
 
     set_bnd(0);
   }
+};
