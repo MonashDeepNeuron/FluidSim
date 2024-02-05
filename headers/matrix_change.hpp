@@ -20,15 +20,16 @@ public:
     if (d > 1) {
       d = 1;
     }
-    x0_[index] = d;
+    x[index] = d;
     // Remove add_source from dens_step to here so display can properly see the
     // addition of the source before being diffused.
-    add_source();
   }
 
   void dens_step() {
+    // add_source();
     SWAP(x0_, x);
     diffuse();
+    test_display();
     SWAP(x0_, x);
     advect();
   }
@@ -74,10 +75,10 @@ private:
     for (int k = 0; k < 20; k++) {
       for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
-          x[IX(i, j)] =
-              (x0_[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
-                                    x[IX(i, j - 1)] + x[IX(i, j + 1)])) /
-              (1 + 4 * a);
+          int index = i + (N + 2) * j;
+          x[index] = (x0_[index] + a * (x[index - 1] + x[index + 1] +
+                                        x[index - N - 2] + x[index + N + 2])) /
+                     (1 + 4 * a);
         }
       }
       set_bnd(0);
