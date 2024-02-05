@@ -55,12 +55,11 @@ private:
     float a = dt_ * diff_ * size_ * size_;
 
     for (int k = 0; k < diffuse_changer; k++) {
-      for (int i = 1; i <= size_; i++) {
-        for (int j = 1; j <= size_; j++) {
-          int index = i + size_ * j;
-          x_[index] =
-              (x0_[index] + a * (x_[index - 1] + x_[index + 1] +
-                                 x_[index - size_] + x_[index + size_])) /
+      for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+          x_[IX(i, j)] =
+              (x0_[IX(i, j)] + a * (x_[IX(i - 1, j)] + x_[IX(i + 1, j)] +
+                                    x_[IX(i, j - 1)] + x_[IX(i, j + 1)])) /
               (1 + 4 * a);
         }
       }
@@ -71,8 +70,8 @@ private:
   void advect() {
     float dt0 = dt_ * size_;
 
-    for (int i = 1; i <= size_; i++) {
-      for (int j = 1; j <= size_; j++) {
+    for (int i = 1; i <= N; i++) {
+      for (int j = 1; j <= N; j++) {
         float x = i - dt0 * u_[IX(i, j)];
         float y = j - dt0 * v_[IX(i, j)];
 
@@ -107,11 +106,12 @@ private:
   }
 
   void test_display(int k) {
-    std::cout << " Iteration " << k << "\n";
-    for (int i = 1; i <= size_; ++i) {
-      for (int j = 1; j <= size_; ++j) {
-        int index = i + (size_ + 2) * j;
-        std::cout << x_[index] << ' ';
+    std::cout << "Iteration " << k << "\n";
+    std::cout << "Size " << static_cast<int>(x_.size()) << "\n";
+
+    for (int i = 0; i < N + 2; ++i) {
+      for (int j = 0; j < N + 2; ++j) {
+        std::cout << x_[IX(i, j)] << ":" << IX(i, j) << ' ';
       }
       std::cout << std::endl;
     }
