@@ -9,27 +9,48 @@
 
 template <int S> class DensitySolver {
 public:
+  // Final array to display
+  std::array<float, S> x;
+
   DensitySolver(float diff, float dt)
-      : size_(SIZE), diff_(diff), dt_(dt), u_{0.1f}, v_{0.1f}, x_{0.1f},
-        x0_{0.1f} {}
+      : size_(SIZE), diff_(diff), dt_(dt), u_{0.5f}, v_{0.5f}, x{0.0f},
+        x0_{0.0f} {}
+
+  void add_density(float d, int index) {
+    if (d > 1) {
+      d = 1;
+    }
+    x0_[index] = d;
+    add_source();
+  }
 
   std::array<float, SIZE> run() {
-    // x0_[200] = 10;
-    // x0_[326] = 10;
-    x0_[120] = 20;
-    x0_[57] = 20;
-    x0_[20] = 10;
-
     // First display
-    test_display(0);
 
     // Call the dens_step function
     dens_step();
+    test_display();
 
-    // Output the result
-    test_display(1);
+    return x;
+  }
 
-    return x0_;
+  void dens_step() {
+    SWAP(x0_, x);
+    diffuse();
+    SWAP(x0_, x);
+    advect();
+  }
+
+  void test_display() {
+    std::cout << "Size " << static_cast<int>(x.size()) << "\n";
+
+    for (int i = 0; i < N + 2; ++i) {
+      for (int j = 0; j < N + 2; ++j) {
+        std::cout << x[IX(i, j)] << ":" << IX(i, j) << ' ';
+      }
+      std::cout << std::endl;
+    }
+    std::cout << "\n\n";
   }
 
 private:
@@ -40,14 +61,13 @@ private:
   int iterations = 10;
   std::array<float, S> u_;
   std::array<float, S> v_;
-  std::array<float, S> x_;
   std::array<float, S> x0_;
 
   void add_source() {
     for (int i = 0; i < size_; ++i) {
-      x_[i] += dt_ * x0_[i];
-      if (x_[i] > 1) {
-        x_[i] = 1;
+      x[i] += dt_ * x0_[i];
+      if (x[i] > 1) {
+        x[i] = 1;
       }
     }
   }
@@ -63,9 +83,9 @@ private:
     for (int k = 0; k < diffuse_changer; k++) {
       for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
-          x_[IX(i, j)] =
-              (x0_[IX(i, j)] + a * (x_[IX(i - 1, j)] + x_[IX(i + 1, j)] +
-                                    x_[IX(i, j - 1)] + x_[IX(i, j + 1)])) /
+          x[IX(i, j)] =
+              (x0_[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
+                                    x[IX(i, j - 1)] + x[IX(i, j + 1)])) /
               (1 + 4 * a);
         }
       }
@@ -78,12 +98,12 @@ private:
 
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
-        float x = i - dt0 * u_[IX(i, j)];
-        float y = j - dt0 * v_[IX(i, j)];
+        float a = i - dt0 * u_[IX(i, j)];
+        float b = j - dt0 * v_[IX(i, j)];
 
         // Clamp values to ensure they stay within bounds
-        x = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, x));
-        y = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, y));
+        x = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, a));
+        y = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, b));
 
         int i0 = static_cast<int>(x);
         int i1 = i0 + 1;
@@ -95,32 +115,10 @@ private:
         float t1 = y - j0;
         float t0 = 1 - t1;
 
-        x_[IX(i, j)] = s0 * (t0 * x0_[IX(i0, j0)] + t1 * x0_[IX(i0, j1)]) +
-                       s1 * (t0 * x0_[IX(i1, j0)] + t1 * x0_[IX(i1, j1)]);
+        x[IX(i, j)] = s0 * (t0 * x0_[IX(i0, j0)] + t1 * x0_[IX(i0, j1)]) +
+                      s1 * (t0 * x0_[IX(i1, j0)] + t1 * x0_[IX(i1, j1)]);
       }
     }
 
     set_bnd(0);
   }
-
-  void dens_step() {
-    add_source();
-    SWAP(x0_, x_);
-    diffuse();
-    SWAP(x0_, x_);
-    advect();
-  }
-
-  void test_display(int k) {
-    std::cout << "Iteration " << k << "\n";
-    std::cout << "Size " << static_cast<int>(x_.size()) << "\n";
-
-    for (int i = 0; i < N + 2; ++i) {
-      for (int j = 0; j < N + 2; ++j) {
-        std::cout << x_[IX(i, j)] << ":" << IX(i, j) << ' ';
-      }
-      std::cout << std::endl;
-    }
-    std::cout << "\n\n";
-  }
-};

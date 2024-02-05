@@ -20,7 +20,7 @@ void GreyScaleMatrixToSFML(sf::RenderWindow &window,
     for (int j = 0; j < N + 2; j++) {
 
       sf::RectangleShape pixel(sf::Vector2f(50, 50));
-      pixel.setPosition((i * 50), (j * 50));
+      pixel.setPosition((j * 50), (i * 50));
       pixel.setFillColor(
           sf::Color(static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
                     static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
@@ -61,6 +61,9 @@ int main() {
   std::array<float, SIZE> x = {0.0};
 
   // Main loop
+  DensitySolver<SIZE> density_sim(0.1, 0.9);
+  density_sim.add_density(1, 53);
+
   while (fluid_gui.is_open()) {
     // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
@@ -74,11 +77,10 @@ int main() {
     */
 
     // (diff, dt)
-    DensitySolver<SIZE> density_sim(0.1, 0.9);
-    x = density_sim.run();
-
-    // std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    // fluid_gui.update_display(GreyScaleMatrixToSFML, x);
+    fluid_gui.update_display(GreyScaleMatrixToSFML, x);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    density_sim.dens_step();
+    density_sim.test_display();
   }
 
   return 0;
