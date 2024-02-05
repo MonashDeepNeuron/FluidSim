@@ -1,3 +1,4 @@
+#include "../headers/const.hpp"
 #include "../headers/event_manager.hpp"
 #include "../headers/gui.hpp"
 #include "../headers/matrix_change.hpp"
@@ -13,7 +14,7 @@ an SFML window
 */
 
 void GreyScaleMatrixToSFML(sf::RenderWindow &window,
-                           const std::array<float, size> &densityArray) {
+                           const std::array<float, SIZE> &densityArray) {
   for (int i = 0; i < N + 2; i++) {
     for (int j = 0; j < N + 2; j++) {
 
@@ -31,7 +32,7 @@ void GreyScaleMatrixToSFML(sf::RenderWindow &window,
 
 int main() {
 
-  std::array<float, size> densityArray = {
+  std::array<float, SIZE> densityArray = {
       0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f, 0.6f, 0.3f,
       0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f, 0.4f, 0.7f, 0.2f, 0.9f,
       0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f, 0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f,
@@ -56,7 +57,7 @@ int main() {
   // Create an event manager and pass the GUI window to its constructor
   event_manager my_event_manager(fluid_gui);
 
-  std::array<float, size> x = {0.0};
+  std::array<float, SIZE> x = {0.0};
 
   // Main loop
   while (fluid_gui.is_open()) {
@@ -71,8 +72,8 @@ int main() {
     we can pass in different drawing functions as the project grows
     */
 
-    // (size, diff, dt)
-    FluidSimulator density_sim(size, 0.1, 0.9);
+    // (diff, dt)
+    DensitySolver<SIZE> density_sim(0.1, 0.9);
     density_sim.run();
     // x = run(x);
     sleep(1);

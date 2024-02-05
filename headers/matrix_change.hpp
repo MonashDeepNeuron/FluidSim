@@ -7,9 +7,9 @@
 
 // Define grid parameters
 
-template <int S> class FluidSimulator {
+template <int S> class DensitySolver {
 public:
-  FluidSimulator(float diff, float dt)
+  DensitySolver(float diff, float dt)
       : size_(SIZE), diff_(diff), dt_(dt), u_{0.1f}, v_{0.1f}, x_{0.1f},
         x0_{0.1f} {}
 
@@ -27,14 +27,6 @@ public:
 
     // Output the result
     test_display(1);
-  }
-  // Static method for indexing
-  static int IX(int i, int j) { return (i) + (N + 2) * (j); }
-
-  // Static method for swapping arrays
-  template <typename T, std::size_t U>
-  static void SWAP(std::array<T, U> &arr1, std::array<T, U> &arr2) {
-    std::swap(arr1, arr2);
   }
 
 private:

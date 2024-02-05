@@ -17,7 +17,6 @@ FetchContent_MakeAvailable(SFML)
 add_executable(CMakeSFMLProject src/main.cpp)
 target_include_directories(CMakeSFMLProject PRIVATE headers)
 target_link_libraries(CMakeSFMLProject PRIVATE sfml-graphics)
-target_link_libraries(CMakeSFMLProject PRIVATE lib)
 target_compile_features(CMakeSFMLProject PRIVATE cxx_std_23)
 
 if(WIN32)
