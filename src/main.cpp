@@ -1,4 +1,5 @@
 #include "event_manager.hpp"
+#include "grid.hpp"
 #include "gui.hpp"
 #include <array>
 
@@ -8,7 +9,7 @@
 #define IX(i, j) ((i) + (N + 2) * (j))
 
 // Define grid size
-constexpr int N = 100;
+constexpr int N = 5;
 constexpr int SIZE = (N + 2) * (N + 2);
 
 /*
@@ -59,6 +60,24 @@ int main() {
   */
 
   gui fluid_gui;
+
+  fluid_grid grid(N, N);
+
+  // DELETE from here
+  // Showing how the grid works.
+  auto a = grid.get(
+      2, 5); // notice that 'a' will not change after setting (2,5) to 10. We're
+             // using the val instead of reference for safety
+  grid.set(2, 5, 10);
+  grid.set(6, 6, 1);
+  auto b = grid.get(2, 5);
+  for (int i = 0; i < 7; ++i) { // print whole grid.
+    for (int j = 0; j < 7; ++j) {
+      std::cout << grid.get(i, j) << " ";
+    }
+    std::cout << std::endl;
+  }
+  // DELETE to here
 
   // Create an event manager and pass the GUI window to its constructor
   event_manager my_event_manager(fluid_gui);
