@@ -13,10 +13,11 @@ public:
       : size_(SIZE), diff_(diff), dt_(dt), u_{0.1f}, v_{0.1f}, x_{0.1f},
         x0_{0.1f} {}
 
-  void run() {
-    x0_[200] = 10;
-    x0_[326] = 10;
+  std::array<float, SIZE> run() {
+    // x0_[200] = 10;
+    // x0_[326] = 10;
     x0_[120] = 20;
+    x0_[57] = 20;
     x0_[20] = 10;
 
     // First display
@@ -27,6 +28,8 @@ public:
 
     // Output the result
     test_display(1);
+
+    return x0_;
   }
 
 private:
@@ -43,6 +46,9 @@ private:
   void add_source() {
     for (int i = 0; i < size_; ++i) {
       x_[i] += dt_ * x0_[i];
+      if (x_[i] > 1) {
+        x_[i] = 1;
+      }
     }
   }
 
@@ -52,7 +58,7 @@ private:
   }
 
   void diffuse() {
-    float a = dt_ * diff_ * size_ * size_;
+    float a = dt_ * diff_ * N * N;
 
     for (int k = 0; k < diffuse_changer; k++) {
       for (int i = 1; i <= N; i++) {
@@ -68,7 +74,7 @@ private:
   }
 
   void advect() {
-    float dt0 = dt_ * size_;
+    float dt0 = dt_ * N;
 
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -76,8 +82,8 @@ private:
         float y = j - dt0 * v_[IX(i, j)];
 
         // Clamp values to ensure they stay within bounds
-        x = std::max(0.5f, std::min(static_cast<float>(size_) + 0.5f, x));
-        y = std::max(0.5f, std::min(static_cast<float>(size_) + 0.5f, y));
+        x = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, x));
+        y = std::max(0.5f, std::min(static_cast<float>(N) + 0.5f, y));
 
         int i0 = static_cast<int>(x);
         int i1 = i0 + 1;

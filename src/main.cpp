@@ -3,7 +3,8 @@
 #include "../headers/gui.hpp"
 #include "../headers/matrix_change.hpp"
 #include <array>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 
 // ./build/bin/CMakeSFMLProject
 
@@ -74,9 +75,10 @@ int main() {
 
     // (diff, dt)
     DensitySolver<SIZE> density_sim(0.1, 0.9);
-    density_sim.run();
+    x = density_sim.run();
 
-    fluid_gui.update_display(GreyScaleMatrixToSFML, x);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    // fluid_gui.update_display(GreyScaleMatrixToSFML, x);
   }
 
   return 0;
