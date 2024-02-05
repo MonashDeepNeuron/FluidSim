@@ -1,17 +1,17 @@
 #pragma once
 
+#include "const.hpp"
 #include <array>
 #include <iostream>
 #include <vector>
 
 // Define grid parameters
-const int N = 20;
 
 template <int S> class FluidSimulator {
 public:
   FluidSimulator(float diff, float dt)
-      : size_((N + 2) * (N + 2)), diff_(diff), dt_(dt), u_{0.1f}, v_{0.1f},
-        x_{0.1f}, x0_{0.1f} {}
+      : size_(SIZE), diff_(diff), dt_(dt), u_{0.1f}, v_{0.1f}, x_{0.1f},
+        x0_{0.1f} {}
 
   void run() {
     x0_[200] = 10;

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "matrix_change.hpp"
+#include "const.hpp"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <tuple>
 
-constexpr int CELL_SIZE = 50;
 class gui {
 private:
   static constexpr int screen_width = N * CELL_SIZE;
@@ -40,7 +39,7 @@ public:
 
   template <typename DrawFunction>
   void update_display(DrawFunction draw_function,
-                      const std::array<float, size> &data) {
+                      const std::array<float, SIZE> &data) {
     window.clear();
     draw_function(window, data);
     window.display();
