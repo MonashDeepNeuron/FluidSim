@@ -7,7 +7,7 @@
 
 // Define grid parameters
 
-template <int S> class DensitySolver {
+template <std::size_t S> class DensitySolver {
 public:
   // Final array to display
   std::array<float, S> x;
@@ -16,8 +16,8 @@ public:
       : size_(SIZE), diff_(diff), dt_(dt), u_{0.01f}, v_{0.01f}, x{0.0f},
         x0_{0.0f} {}
 
-  void add_density(float d, int index) {
-    if (d > 1) {
+  void add_density(float d, std::size_t index) {
+    if (d > 1.0f) {
       d = 1;
     }
     x[index] = d;
@@ -41,7 +41,7 @@ public:
       for (int j = 0; j < N + 2; ++j) {
         std::cout << x[IX(i, j)] << ":" << IX(i, j) << ' ';
       }
-      std::cout << std::endl;
+      std::cout << '\n';
     }
     std::cout << "\n\n";
   }

@@ -59,7 +59,7 @@ int main() {
   event_manager my_event_manager(fluid_gui);
 
   // Main loop
-  DensitySolver<SIZE> ds(0.007, 0.1);
+  DensitySolver<SIZE> ds(0.007, 0.3);
 
   // Example of one mouse click event
   // ds.add_density(1, 53);
@@ -87,7 +87,7 @@ int main() {
     ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     ds.test_display();
     ds.dens_step();
   }
