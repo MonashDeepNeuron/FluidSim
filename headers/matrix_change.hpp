@@ -56,12 +56,11 @@ private:
   std::array<float, S> x0_;
 
   void add_source() {
-    for (int i = 0; i < size_; ++i) {
-      x[i] += dt_ * x0_[i];
-      if (x[i] > 1) {
-        x[i] = 1;
-      }
-    }
+    std::transform(x0_.cbegin(), x0_.cend(), x.begin(), x.begin(),
+                   [=](float x0_val, float x_val) {
+                     return std::ranges::clamp(x_val + dt_ * x0_val, 0.0f,
+                                               1.0f);
+                   });
   }
 
   void set_bnd(int b) {
