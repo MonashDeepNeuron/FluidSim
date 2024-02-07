@@ -80,7 +80,8 @@ int main() {
   while (fluid_gui.is_open()) {
     // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
-    event_mouse_click = my_event_manager.handle_event(event);
+    // event_mouse_click = my_event_manager.handle_event(event);
+    event_mouse_click = my_event_manager.check_left_mouse_button();
     if (event_mouse_click != 0) {
       ds.add_density(1, event_mouse_click);
     }

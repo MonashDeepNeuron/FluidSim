@@ -43,4 +43,18 @@ public:
       return 0;
     }
   }
+
+  int check_left_mouse_button() {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+      sf::Vector2i mousePos = sf::Mouse::getPosition(window.getRenderWindow());
+      int x = mousePos.x / CELL_SIZE;
+      int y = mousePos.y / CELL_SIZE;
+      if (x >= 0 && x <= N && y >= 0 && y <= N) {
+        std::cout << "Left mouse button is being held down at (" << x << ", "
+                  << y << ")\n";
+        return IX(y, x);
+      }
+    }
+    return 0;
+  }
 };
