@@ -75,20 +75,25 @@ int main() {
   // ds.add_density(1, 60);
   // ds.add_density(1, 61);
 
+  int event_mouse_click;
+
   while (fluid_gui.is_open()) {
     // Check for events and handle them
     sf::Event event = fluid_gui.check_event();
-    my_event_manager.handle_event(event);
+    event_mouse_click = my_event_manager.handle_event(event);
+    if (event_mouse_click != 0) {
+      ds.add_density(1, event_mouse_click);
+    }
 
     // An example of three mouse presses at three individual spots across an
     // even velocity grid
-    ds.add_density(1, 142);
-    ds.add_density(1, 289);
+    // ds.add_density(1, 142);
+    // ds.add_density(1, 289);
     ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    ds.test_display();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // ds.test_display();
     ds.dens_step();
   }
 

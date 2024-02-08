@@ -13,7 +13,7 @@ public:
   std::array<float, S> x;
 
   DensitySolver(float diff, float dt)
-      : size_(SIZE), diff_(diff), dt_(dt), u_{0.01f}, v_{0.01f}, x{0.0f},
+      : size_(SIZE), diff_(diff), dt_(dt), u_{2.0f}, v_{2.0f}, x{0.0f},
         x0_{0.0f} {}
 
   void add_density(float d, std::size_t index) {
@@ -29,7 +29,7 @@ public:
     // add_source();
     SWAP(x0_, x);
     diffuse();
-    test_display();
+    // test_display();
     SWAP(x0_, x);
     advect();
   }
