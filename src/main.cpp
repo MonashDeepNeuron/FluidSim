@@ -17,7 +17,7 @@ an SFML window
 void GreyScaleMatrixToSFML(sf::RenderWindow &window,
                            const std::array<float, SIZE> &densityArray) {
   for (int i = 0; i < N + 2; i++) {
-    for (int j = 0; j <= N + 2; j++) {
+    for (int j = 0; j < N + 2; j++) {
 
       sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       pixel.setPosition((j * CELL_SIZE), (i * CELL_SIZE));
@@ -93,7 +93,7 @@ int main() {
     ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     // ds.test_display();
     ds.dens_step();
   }
