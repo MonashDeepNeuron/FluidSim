@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int N = 50;
+constexpr int N = 100;
 constexpr int SIZE = (N + 2) * (N + 2);
 constexpr int CELL_SIZE = 15;
 
