@@ -23,9 +23,12 @@ void GreyScaleMatrixToSFML(sf::RenderWindow &window,
       sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
       pixel.setPosition((j * CELL_SIZE), (i * CELL_SIZE));
       pixel.setFillColor(
-          sf::Color(static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
-                    static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255),
-                    static_cast<sf::Uint8>(densityArray[IX(i, j)] * 255)));
+          sf::Color(static_cast<sf::Uint8>(
+                        std::clamp(densityArray[IX(i, j)], 0.0f, 1.0f) * 255),
+                    static_cast<sf::Uint8>(
+                        std::clamp(densityArray[IX(i, j)], 0.0f, 1.0f) * 255),
+                    static_cast<sf::Uint8>(
+                        std::clamp(densityArray[IX(i, j)], 0.0f, 1.0f) * 255)));
 
       window.draw(pixel);
     }
@@ -84,7 +87,7 @@ int main() {
     // event_mouse_click = my_event_manager.handle_event(event);
     event_mouse_click = my_event_manager.check_left_mouse_button();
     if (event_mouse_click != 0) {
-      ds.add_density(1, event_mouse_click);
+      ds.add_density(10, event_mouse_click);
     }
 
     // An example of three mouse presses at three individual spots across an

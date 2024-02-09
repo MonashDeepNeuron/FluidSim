@@ -17,9 +17,6 @@ public:
         x0_{0.0f} {}
 
   void add_density(float d, int index) {
-    if (d > 1) {
-      d = 1;
-    }
     x[index] = d;
     // Remove add_source from dens_step to here so display can properly see the
     // addition of the source before being diffused.
