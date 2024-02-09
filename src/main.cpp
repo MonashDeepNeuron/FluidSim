@@ -2,6 +2,7 @@
 #include "../headers/event_manager.hpp"
 #include "../headers/gui.hpp"
 #include "../headers/matrix_change.hpp"
+#include <SFML/Graphics.hpp>
 #include <array>
 #include <chrono>
 #include <thread>
@@ -59,7 +60,7 @@ int main() {
   event_manager my_event_manager(fluid_gui);
 
   // Main loop
-  DensitySolver<SIZE> ds(0.007, 0.1);
+  DensitySolver<SIZE> ds(0.0001, 0.1);
 
   // Example of one mouse click event
   // ds.add_density(1, 53);
@@ -90,7 +91,7 @@ int main() {
     // even velocity grid
     // ds.add_density(1, 142);
     // ds.add_density(1, 289);
-    ds.add_density(1, 435);
+    // ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
     std::this_thread::sleep_for(std::chrono::milliseconds(5));
