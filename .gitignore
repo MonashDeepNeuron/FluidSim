@@ -45,3 +45,7 @@ out
 .idea
 .vs
 .vscode
+
+# CMake Items
+CMakeUserPresets.json
+Testing
