@@ -1,8 +1,17 @@
 #pragma once
 
-constexpr int N = 100;
-constexpr int SIZE = (N + 2) * (N + 2);
-constexpr int CELL_SIZE = 5;
+#include <cstddef>
+#include <type_traits>
 
-#define IX(i, j) (i + (N + 2) * j)
-#define SWAP(arr1, arr2) std::swap(arr1, arr2)
+using std::size_t;
+using s_size_t = std::make_signed_t<size_t>;
+
+// Unsigned versions of programs base defaults
+constexpr size_t AXIS_SIZE = 100;
+constexpr size_t BUFFER_SIZE = (AXIS_SIZE + 2) * (AXIS_SIZE + 2);
+constexpr size_t CELL_SIZE = 5;
+
+// Signed versions of programs base defaults
+constexpr s_size_t S_AXIS_SIZE = static_cast<s_size_t>(AXIS_SIZE);
+constexpr s_size_t S_BUFFER_SIZE = static_cast<s_size_t>(BUFFER_SIZE);
+constexpr s_size_t S_CELL_SIZE = static_cast<s_size_t>(CELL_SIZE);

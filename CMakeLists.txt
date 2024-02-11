@@ -42,7 +42,6 @@ set_property(TARGET FluidSim PROPERTY OUTPUT_NAME FluidSim)
 
 target_compile_features(FluidSim PRIVATE cxx_std_23)
 
-target_link_libraries(FluidSim PRIVATE libFluidSim)
 target_link_libraries(FluidSim PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 
 # ---- Install rules ----
