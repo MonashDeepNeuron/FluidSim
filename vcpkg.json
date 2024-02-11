@@ -4,6 +4,10 @@
     "builtin-baseline": "962e5e39f8a25f42522f51fffc574e05a3efd26b",
     "dependencies": [
         {
+            "name": "fmt",
+            "version>=": "10.1.0"
+        },
+        {
             "name": "sfml",
             "version>=": "2.6.0#18"
         }

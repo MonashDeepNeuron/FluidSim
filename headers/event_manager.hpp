@@ -4,6 +4,8 @@
 #include "gui.hpp"
 #include "utils.hpp"
 
+#include <fmt/core.h>
+
 #include <cmath> // Include cmath for floor function
 #include <cstddef>
 #include <iostream>
@@ -22,13 +24,14 @@ public:
     {
     }
 
-    inline auto key_pressed() const -> void { std::cout << "key pressed!\n"; }
+    inline auto key_pressed() const -> void { fmt::println("key pressed!"); }
 
     auto mouse_pressed(sf::Event event) -> size_t
     {
-        std::cout << "Mouse button pressed event received\n";
+        fmt::println("Mouse button pressed event received");
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            std::cout << "Mouse left pressed\n";
+            fmt::println("Mouse left pressed");
 
             auto x = event.mouseButton.x / S_CELL_SIZE;
             auto y = event.mouseButton.y / S_CELL_SIZE;
@@ -37,11 +40,7 @@ public:
                 return 0;
             }
 
-            std::cout << "Left mouse button was pressed at ("
-                      << x
-                      << ", "
-                      << y
-                      << ")\n";
+            fmt::println("Left mouse button was pressed at ({}, {})", x, y);
 
             return IX(static_cast<size_t>(y), static_cast<size_t>(x));
         }
@@ -71,11 +70,7 @@ public:
             auto y = mousePos.y / S_CELL_SIZE;
 
             if (0 <= x && x <= S_AXIS_SIZE && 0 <= y && y <= S_AXIS_SIZE) [[likely]] {
-                std::cout << "Left mouse button is being held down at ("
-                          << x
-                          << ", "
-                          << y
-                          << ")\n";
+                fmt::println("Left mouse button is being held down at ({}, {})", x, y);
 
                 return IX(sign_cast(y), sign_cast(x));
             }

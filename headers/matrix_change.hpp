@@ -3,6 +3,8 @@
 #include "const.hpp"
 #include "utils.hpp"
 
+#include <fmt/core.h>
+
 #include <array>
 #include <cstddef>
 #include <iostream>
@@ -57,6 +59,8 @@ public:
         m_x[index] = d;
         // Remove _M_add_source from dens_step to here so display can properly see the
         // addition of the source before being diffused.
+
+        return 0;
     }
 
     auto dens_step() -> void
@@ -71,15 +75,17 @@ public:
 
     auto test_display() -> void
     {
-        std::cout << "Size " << static_cast<int>(m_x.size()) << "\n";
+        fmt::println("Size {}", static_cast<int>(m_x.size()));
 
         for (int i = 0; i < AXIS_SIZE + 2; ++i) {
             for (int j = 0; j < AXIS_SIZE + 2; ++j) {
-                std::cout << m_x[IX(i, j)] << ":" << IX(i, j) << ' ';
+                fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
             }
-            std::cout << std::endl;
+
+            fmt::print("\n");
         }
-        std::cout << "\n\n";
+
+        fmt::print("\n\n");
     }
 
 private:

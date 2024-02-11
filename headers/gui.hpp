@@ -3,6 +3,8 @@
 #include "const.hpp"
 #include "utils.hpp"
 
+#include <fmt/core.h>
+
 #include <SFML/Graphics.hpp>
 
 #include <cstddef>
@@ -27,7 +29,7 @@ public:
     {
         if (!window.isOpen()) { // We need this for some reason otherwise memory
                                 // error.
-            std::cout << "????";
+            fmt::println("????");
         }
 
         window.setFramerateLimit(frame_limit);
