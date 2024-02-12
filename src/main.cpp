@@ -90,7 +90,7 @@ int main() {
     // even velocity grid
     // ds.add_density(1, 142);
     // ds.add_density(1, 289);
-    ds.add_density(1, 435);
+    //ds.add_density(1, 435);
 
     fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x);
     std::this_thread::sleep_for(std::chrono::milliseconds(5));

@@ -17,9 +17,9 @@ public:
   inline void key_pressed() const { std::cout << "key pressed!\n"; }
 
   int mouse_pressed(sf::Event event) {
-    std::cout << "Mouse button pressed event received\n";
+    //std::cout << "Mouse button pressed event received\n";
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-      std::cout << "Mouse left pressed\n";
+      //std::cout << "Mouse left pressed\n";
       int x = event.mouseButton.x / CELL_SIZE;
       int y = event.mouseButton.y / CELL_SIZE;
       if (x < 0 || x > N || y < 0 || y > N) {
@@ -50,8 +50,9 @@ public:
       int x = mousePos.x / CELL_SIZE;
       int y = mousePos.y / CELL_SIZE;
       if (x >= 0 && x <= N && y >= 0 && y <= N) {
-        std::cout << "Left mouse button is being held down at (" << x << ", "
-                  << y << ")\n";
+        
+        //std::cout << "Left mouse button is being held down at (" << x << ", "
+        //          << y << ")\n";
         return IX(y, x);
       }
     }

@@ -13,8 +13,8 @@ public:
   std::array<float, S> x;
 
   DensitySolver(float diff, float dt)
-      : size_(SIZE), diff_(diff), dt_(dt), u_{0.01f}, v_{0.01f}, x{0.0f},
-        x0_{0.0f} {}
+      : size_(SIZE), diff_(diff), dt_(dt), u0_{1.01f}, v0_{0.01f}, x{0.0f},
+        x0_{0.0f}, u_{1.01f}, v_{0.01f} {}
 
   void add_density(float d, int index) {
     if (d > 1) {
@@ -53,6 +53,8 @@ private:
   int diffuse_changer = 20;
   std::array<float, S> u_;
   std::array<float, S> v_;
+  std::array<float, S> u0_;
+  std::array<float, S> v0_;
   std::array<float, S> x0_;
 
   void add_source() {
@@ -65,8 +67,16 @@ private:
   }
 
   void set_bnd(int b) {
-    // Implementation of setting boundary conditions goes here
-    // Replace with your specific implementation
+    for (int i = 1; i <= N; i++) {
+        x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
+        x[IX(N + 1, i)] = b == 1 ? -x[IX(N, i)] : x[IX(N, i)];
+        x[IX(i, 0)] = b == 2 ? -x[IX(i, 1)] : x[IX(i, 1)];
+        x[IX(i, N + 1)] = b == 2 ? -x[IX(i, N)] : x[IX(i, N)];
+    }
+    x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
+    x[IX(0, N + 1)] = 0.5f * (x[IX(1, N + 1)] + x[IX(0, N)]);
+    x[IX(N + 1, 0)] = 0.5f * (x[IX(N, 0)] + x[IX(N + 1, 1)]);
+    x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
   }
 
   void diffuse() {
@@ -114,4 +124,26 @@ private:
 
     set_bnd(0);
   }
+
+  
+  void add_velocity_x(float d, int index){
+    if (d > 1) {
+      d = 1;
+    }
+    u_[index] = d;
+  }
+
+  void add_velocity_y(float d, int index){
+    if (d > 1) {
+      d = 1;
+    }
+    v_[index] = d;
+  }
+
+
+
+
+
+
+
 };
