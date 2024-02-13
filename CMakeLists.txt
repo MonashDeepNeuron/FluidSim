@@ -17,6 +17,8 @@ find_package(SFML COMPONENTS system window graphics CONFIGS REQUIRED)
 
 find_package(fmt CONFIG REQUIRED)
 
+find_package(mdspan CONFIG REQUIRED)
+
 # ---- Declare internal library ----
 # add_library(libFluidSim OBJECT)
 
@@ -44,7 +46,11 @@ set_property(TARGET FluidSim PROPERTY OUTPUT_NAME FluidSim)
 
 target_compile_features(FluidSim PRIVATE cxx_std_23)
 
-target_link_libraries(FluidSim PRIVATE fmt::fmt sfml-system sfml-network sfml-graphics sfml-window)
+target_link_libraries(
+    FluidSim PRIVATE
+    fmt::fmt
+    std::mdspan
+    sfml-system sfml-network sfml-graphics sfml-window)
 
 # ---- Install rules ----
 if(NOT CMAKE_SKIP_INSTALL_RULES)

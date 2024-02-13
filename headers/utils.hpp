@@ -1,7 +1,6 @@
 #pragma once
 
-#include "const.hpp"
-#include "utils.hpp"
+#include "aliases.hpp"
 
 #include <concepts>
 #include <cstddef>

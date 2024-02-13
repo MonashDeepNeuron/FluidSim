@@ -1,16 +1,15 @@
+#include "aliases.hpp"
 #include "event_manager.hpp"
 #include "gui.hpp"
 #include "matrix_change.hpp"
 
 #include <SFML/Graphics.hpp>
 
-#include <array>
 #include <chrono>
-#include <cstddef>
+#include <optional>
 #include <thread>
 
 // Aliases
-using std::size_t;
 using ms = std::chrono::milliseconds;
 
 constexpr auto grey_scale(float value) -> sf::Uint8
@@ -24,12 +23,12 @@ constexpr auto grey_scale(float value) -> sf::Uint8
  * on a single pixel in an SFML window.
  *
  * @param window
- * @param densityArray
+ * @param densityMtx
  */
-auto GreyScaleMatrixToSFML(sf::RenderWindow& window, std::array<float, BUFFER_SIZE> const& densityArray) -> void
+auto GreyScaleMatrixToSFML(sf::RenderWindow& window, matrix_span_t<float> densityMtx) -> void
 {
-    for (auto i { 0uL }; i < AXIS_SIZE + 2uL; i++) {
-        for (auto j { 0uL }; j < AXIS_SIZE + 2uL; j++) {
+    for (auto i = 0uL; i < densityMtx.extent(0); ++i) {
+        for (auto j { 0uL }; j < densityMtx.extent(1); ++j) {
 
             auto xpos = static_cast<float>(j * CELL_SIZE);
             auto ypos = static_cast<float>(i * CELL_SIZE);
@@ -37,7 +36,11 @@ auto GreyScaleMatrixToSFML(sf::RenderWindow& window, std::array<float, BUFFER_SI
             sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
             pixel.setPosition(xpos, ypos);
 
-            auto value = grey_scale(densityArray[IX(i, j)]);
+#if MDSPAN_USE_BRACKET_OPERATOR
+            auto value = grey_scale(densityMtx[i, j]);
+#else
+            auto value = grey_scale(densityMtx(i, j));
+#endif
 
             pixel.setFillColor(sf::Color(value, value, value));
 
@@ -49,7 +52,7 @@ auto GreyScaleMatrixToSFML(sf::RenderWindow& window, std::array<float, BUFFER_SI
 auto main() -> int
 {
 
-    // std::array<float, BUFFER_SIZE> densityArray = {
+    // std::array<float, BUFFER_SIZE> densityMtx = {
     //     0.2f, 0.8f, 0.5f, 0.3f, 0.7f, 0.1f, 0.4f, 0.6f, 0.9f, 0.2f, 0.6f, 0.3f,
     //     0.8f, 0.1f, 0.5f, 0.9f, 0.2f, 0.7f, 0.4f, 0.3f, 0.4f, 0.7f, 0.2f, 0.9f,
     //     0.3f, 0.6f, 0.8f, 0.5f, 0.1f, 0.7f, 0.9f, 0.2f, 0.7f, 0.5f, 0.1f, 0.8f,
@@ -91,7 +94,7 @@ auto main() -> int
     // ds.add_density(1, 60);
     // ds.add_density(1, 61);
 
-    auto event_mouse_click = 0uL;
+    auto event_mouse_click = std::optional<std::pair<size_t, size_t>>(std::nullopt);
 
     while (fluid_gui.is_open()) {
 
@@ -101,8 +104,9 @@ auto main() -> int
         // event_mouse_click = my_event_manager.handle_event(event);
         event_mouse_click = my_event_manager.check_left_mouse_button();
 
-        if (event_mouse_click != 0) {
-            ds.add_density(10, event_mouse_click);
+        if (event_mouse_click.has_value()) {
+            auto [cidx, ridx] = event_mouse_click.value();
+            ds.add_density(10, cidx, ridx);
         }
 
         // An example of three mouse presses at three individual spots across an
