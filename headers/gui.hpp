@@ -22,6 +22,9 @@ private:
     sf::RenderWindow window;
 
 public:
+    enum class draw_type : short { GREY,
+        HSV,
+        VEL };
     gui()
         : window(sf::VideoMode(screen_width, screen_height), window_text)
     {
@@ -51,10 +54,22 @@ public:
 
         return event;
     }
-    auto update_display(std::array<float, BUFFER_SIZE>& data) -> void
+    auto update_display(std::array<float, BUFFER_SIZE>& data, draw_type type) -> void
     {
         window.clear();
-        GreyScaleMatrixToSFML(data);
+        switch (type) {
+        case draw_type::GREY:
+            GreyScaleMatrixToSFML(data);
+            break;
+        case draw_type::HSV:
+            HSV_to_SFML(data);
+            break;
+        case draw_type::VEL:
+            HSV_to_SFML(data);
+            break;
+        default:
+            GreyScaleMatrixToSFML(data);
+        }
         window.display();
     }
 
@@ -87,6 +102,26 @@ public:
                 pixel.setPosition(xpos, ypos);
 
                 auto value = grey_scale(data.at(IX(i, j)));
+
+                pixel.setFillColor(sf::Color(value, value, value));
+
+                window.draw(pixel);
+            }
+        }
+    }
+
+    auto HSV_to_SFML(std::array<float, BUFFER_SIZE>& data) -> void
+    {
+        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
+            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+
+                auto xpos = static_cast<float>(j * CELL_SIZE);
+                auto ypos = static_cast<float>(i * CELL_SIZE);
+
+                sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+                pixel.setPosition(xpos, ypos);
+
+                auto value = grey_scale(data.at(IX(j, i)));
 
                 pixel.setFillColor(sf::Color(value, value, value));
 
