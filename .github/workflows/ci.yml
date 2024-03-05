@@ -2,15 +2,106 @@ name: CI
 
 on:
   push:
-    branches: master
+    branches:
+      - master
+
   pull_request:
     types: [opened, reopened]
-    branches: master
+    branches:
+      - master
+
+env:
+  VCPKG_COMMIT: "962e5e39f8a25f42522f51fffc574e05a3efd26b"
 
 jobs:
-  build:
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
-    runs-on: ${{ matrix.platform.os }}
+  lint:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with: { python-version: "3.8" }
+
+      - name: Install codespell
+        run: pip3 install codespell
+
+      - name: Lint
+        run: cmake -D FORMAT_COMMAND=clang-format-14 -P cmake/lint.cmake
+
+      - name: Spell check
+        if: always()
+        run: cmake -P cmake/spell.cmake
+
+  coverage:
+    needs: [lint]
+
+    runs-on: ubuntu-22.04
+
+    if: github.repository_owner == 'MonashDeepNeuron'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install LCov
+        run: sudo apt-get update -q
+          && sudo apt-get install lcov -q -y
+
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: "${{ env.VCPKG_COMMIT }}" }
+
+      - name: Configure
+        run: cmake --preset=ci-coverage
+
+      - name: Build
+        run: cmake --build build/coverage -j 2
+
+      - name: Test
+        working-directory: build/coverage
+        run: ctest --output-on-failure --no-tests=error -j 2
+
+      - name: Process coverage info
+        run: cmake --build build/coverage -t coverage
+
+      - name: Submit to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          file: build/coverage/coverage.info
+
+  sanitize:
+    needs: [lint]
+
+    runs-on: ubuntu-22.04
+
+    env: { CXX: clang++-14 }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: "${{ env.VCPKG_COMMIT }}" }
+
+      - name: Configure
+        run: cmake --preset=ci-sanitize
+
+      - name: Build
+        run: cmake --build build/sanitize -j 2
+
+      - name: Test
+        working-directory: build/sanitize
+        env:
+          ASAN_OPTIONS: "strict_string_checks=1:\
+            detect_stack_use_after_return=1:\
+            check_initialization_order=1:\
+            strict_init_order=1:\
+            detect_leaks=1"
+          UBSAN_OPTIONS: print_stacktrace=1
+        run: ctest --output-on-failure --no-tests=error -j 2
+
+  test:
+    needs: [lint]
 
     strategy:
       fail-fast: false
@@ -22,29 +113,48 @@ jobs:
           - {
               name: Linux Clang,
               os: ubuntu-latest,
-              flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++,
+              flags: -DCMAKE_C_COMPILER=clang-14 -DCMAKE_CXX_COMPILER=clang++-14,
             }
           - { name: macOS, os: macos-latest }
         config:
           - { name: Shared, flags: -DBUILD_SHARED_LIBS=TRUE }
           - { name: Static, flags: -DBUILD_SHARED_LIBS=FALSE }
 
-    steps:
-      - name: Install Linux Dependencies
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+    runs-on: ${{ matrix.platform.os }}
 
-      - name: Checkout
-        uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install static analyzers
+        if: matrix.platform.os == 'ubuntu-22.04'
+        run: >-
+          sudo apt-get update
+          sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev clang-tidy-14 cppcheck -y -q
+
+          sudo update-alternatives --install
+          /usr/bin/clang-tidy clang-tidy
+          /usr/bin/clang-tidy-14 140
+
+      - name: Install vcpkg
+        uses: friendlyanon/setup-vcpkg@v1
+        with: { committish: "${{ env.VCPKG_COMMIT }}" }
+
+      - name: Setup MultiToolTask
+        if: matrix.platform.os == 'windows-2022'
+        run: |
+          Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
+          Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
       - name: Configure
-        shell: bash
-        run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX=install ${{matrix.platform.flags}} ${{matrix.config.flags}}
+        shell: pwsh
+        run: cmake "--preset=$("${{ matrix.platform.os }}".split("-")[0])"
 
       - name: Build
-        shell: bash
-        run: cmake --build build --config Release
+        run: cmake --build "$("${{ matrix.platform.os }}".split("-")[0])" --config Release -j 2
 
       - name: Install
-        shell: bash
-        run: cmake --install build --config Release
+        run: cmake --install "$("${{ matrix.platform.os }}".split("-")[0])" --config Release --prefix prefix
+
+      - name: Test
+        working-directory: build/"$("${{ matrix.platform.os }}".split("-")[0])"
+        run: ctest --output-on-failure --no-tests=error -C Release -j 2
