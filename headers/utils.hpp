@@ -1,11 +1,8 @@
 #pragma once
 
 #include "const.hpp"
-#include "utils.hpp"
 
 #include <concepts>
-#include <cstddef>
-#include <type_traits>
 
 constexpr auto IX(size_t i, size_t j) -> size_t { return (i + (AXIS_SIZE + 2) * j); }
 
