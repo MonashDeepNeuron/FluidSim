@@ -31,7 +31,7 @@ public:
         // fmt::println("Mouse button pressed event received");
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            // fmt::println("Mouse left pressed");
+            fmt::println("Mouse left pressed");
 
             auto x = event.mouseButton.x / S_CELL_SIZE;
             auto y = event.mouseButton.y / S_CELL_SIZE;
@@ -40,7 +40,7 @@ public:
                 return 0;
             }
 
-            // fmt::println("Left mouse button was pressed at ({}, {})", x, y);
+            fmt::println("Left mouse button was pressed at ({}, {})", x, y);
 
             return IX(static_cast<size_t>(y), static_cast<size_t>(x));
         }
@@ -70,7 +70,7 @@ public:
             auto y = mousePos.y / S_CELL_SIZE;
 
             if (0 <= x && x <= S_AXIS_SIZE && 0 <= y && y <= S_AXIS_SIZE) [[likely]] {
-                fmt::println("Left mouse button is being held down at ({}, {})", x, y);
+                //fmt::println("Left mouse button is being held down at ({}, {})", x, y);
 
                 return IX(sign_cast(y), sign_cast(x));
             }

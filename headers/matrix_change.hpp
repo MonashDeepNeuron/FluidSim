@@ -26,7 +26,7 @@ public:
         : m_diffuse_changer { 20 }
         , m_diff { 0.0f }
         , m_dt { 0.0f }
-        , m_u { 0.0f }
+        , m_u { 0.51f }
         , m_v { 0.0f }
         , m_x0 { 0.0f }
         , m_x { 0.0f }
@@ -37,8 +37,8 @@ public:
         : m_diffuse_changer { 20 }
         , m_diff { diff }
         , m_dt { dt }
-        , m_u { 0.01f }
-        , m_v { 0.01f }
+        , m_u { 0.51f }
+        , m_v { 1.01f }
         , m_x0 { 0.0f }
         , m_x { 0.0f }
     {
@@ -100,7 +100,7 @@ private:
         }
     }
 
-  void _M_set_bnd(int b) {
+    void _M_set_bnd(int b) {
     for (size_t i = 1; i <= AXIS_SIZE; i++) {
         m_x[IX(0, i)] = b == 1 ? -m_x[IX(1, i)] : m_x[IX(1, i)];
         m_x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -m_x[IX(AXIS_SIZE, i)] : m_x[IX(AXIS_SIZE, i)];
@@ -111,7 +111,7 @@ private:
     m_x[IX(0, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(1, AXIS_SIZE + 1)] + m_x[IX(0, AXIS_SIZE)]);
     m_x[IX(AXIS_SIZE + 1, 0)] = 0.5f * (m_x[IX(AXIS_SIZE, 0)] + m_x[IX(AXIS_SIZE + 1, 1)]);
     m_x[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(AXIS_SIZE, AXIS_SIZE + 1)] + m_x[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
-  }
+    }
     auto _M_diffuse() -> void
     {
         float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
@@ -124,7 +124,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(2);
         }
     }
 
@@ -134,13 +134,13 @@ private:
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
-                auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
+                auto a = static_cast<float>(i) - dt0 * 0.051f;//m_u[IX(i, j)];
+                auto b = static_cast<float>(j) - dt0 * 0.05f;//m_v[IX(i, j)];
 
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
                 b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
-
+                
                 auto i0 = static_cast<size_t>(a);
                 auto i1 = i0 + 1;
                 auto j0 = static_cast<size_t>(b);
@@ -150,8 +150,11 @@ private:
                 auto s0 = 1 - s1;
                 auto t1 = b - static_cast<float>(j0);
                 auto t0 = 1 - t1;
+                
+
 
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
+                
             }
         }
 
