@@ -100,24 +100,18 @@ private:
         }
     }
 
-  void set_bnd(int b) {
-    for (int i = 1; i <= AXIS_SIZE; i++) {
-        x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
-        x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -x[IX(AXIS_SIZE, i)] : x[IX(AXIS_SIZE, i)];
-        x[IX(i, 0)] = b == 2 ? -x[IX(i, 1)] : x[IX(i, 1)];
-        x[IX(i, AXIS_SIZE + 1)] = b == 2 ? -x[IX(i, AXIS_SIZE)] : x[IX(i, AXIS_SIZE)];
+  void _M_set_bnd(int b) {
+    for (size_t i = 1; i <= AXIS_SIZE; i++) {
+        m_x[IX(0, i)] = b == 1 ? -m_x[IX(1, i)] : m_x[IX(1, i)];
+        m_x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -m_x[IX(AXIS_SIZE, i)] : m_x[IX(AXIS_SIZE, i)];
+        m_x[IX(i, 0)] = b == 2 ? -m_x[IX(i, 1)] : m_x[IX(i, 1)];
+        m_x[IX(i, AXIS_SIZE + 1)] = b == 2 ? -m_x[IX(i, AXIS_SIZE)] : m_x[IX(i, AXIS_SIZE)];
     }
-    x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]);
-    x[IX(0, AXIS_SIZE + 1)] = 0.5f * (x[IX(1, AXIS_SIZE + 1)] + x[IX(0, AXIS_SIZE)]);
-    x[IX(AXIS_SIZE + 1, 0)] = 0.5f * (x[IX(AXIS_SIZE, 0)] + x[IX(AXIS_SIZE + 1, 1)]);
-    x[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (x[IX(AXIS_SIZE, AXIS_SIZE + 1)] + x[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+    m_x[IX(0, 0)] = 0.5f * (m_x[IX(1, 0)] + m_x[IX(0, 1)]);
+    m_x[IX(0, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(1, AXIS_SIZE + 1)] + m_x[IX(0, AXIS_SIZE)]);
+    m_x[IX(AXIS_SIZE + 1, 0)] = 0.5f * (m_x[IX(AXIS_SIZE, 0)] + m_x[IX(AXIS_SIZE + 1, 1)]);
+    m_x[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(AXIS_SIZE, AXIS_SIZE + 1)] + m_x[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
   }
-    auto _M_set_bnd([[maybe_unused]] int b) -> void
-    {
-        // Implementation of setting boundary conditions goes here
-        // Replace with your specific implementation
-    }
-
     auto _M_diffuse() -> void
     {
         float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
