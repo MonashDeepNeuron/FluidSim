@@ -50,7 +50,7 @@ auto main() -> int
             ds.add_density(10, event_mouse_click);
         }
 
-        fluid_gui.update_display(ds.x(), gui::draw_type::HSV);
+        fluid_gui.update_display(ds.x(), fluid_gui.get_current_draw_type());
 
         std::this_thread::sleep_for(ms(5));
 

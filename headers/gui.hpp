@@ -25,6 +25,10 @@ public:
     enum class draw_type : short { GREY,
         HSV,
         VEL };
+
+    draw_type current_draw_type = draw_type::GREY;
+
+    draw_type get_current_draw_type() const { return current_draw_type; }
     gui()
         : window(sf::VideoMode(screen_width, screen_height), window_text)
     {
@@ -50,6 +54,21 @@ public:
         // the window, not the fluids.
         if (event.type == sf::Event::Closed) {
             window.close();
+        }
+
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+            // Toggle to the next draw type
+            switch (current_draw_type) {
+            case draw_type::GREY:
+                current_draw_type = draw_type::HSV;
+                break;
+            case draw_type::HSV:
+                current_draw_type = draw_type::VEL;
+                break;
+            case draw_type::VEL:
+                current_draw_type = draw_type::GREY;
+                break;
+            }
         }
 
         return event;
