@@ -157,6 +157,11 @@ public:
         float m = V - C;
         float Rs, Gs, Bs;
 
+        // Ensure H is within the range of 0 to 360
+        H = fmodf(H, 360.0f);
+        if (H < 0.0f)
+            H += 360.0f;
+
         if (H >= 0.0f && H < 60.0f) {
             Rs = C;
             Gs = X;
