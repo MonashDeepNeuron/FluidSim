@@ -100,18 +100,23 @@ private:
         }
     }
 
-  void _M_set_bnd(int b) {
-    for (size_t i = 1; i <= AXIS_SIZE; i++) {
-        m_x[IX(0, i)] = b == 1 ? -m_x[IX(1, i)] : m_x[IX(1, i)];
-        m_x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -m_x[IX(AXIS_SIZE, i)] : m_x[IX(AXIS_SIZE, i)];
-        m_x[IX(i, 0)] = b == 2 ? -m_x[IX(i, 1)] : m_x[IX(i, 1)];
-        m_x[IX(i, AXIS_SIZE + 1)] = b == 2 ? -m_x[IX(i, AXIS_SIZE)] : m_x[IX(i, AXIS_SIZE)];
+    void _M_set_bnd(int b) {
+	
+		for (size_t i = 1; i <= AXIS_SIZE; i++) {
+		
+		m_x[i] = m_x[i + AXIS_SIZE + 2];
+		int c = b + 1;
+		m_x[i + (AXIS_SIZE + 2 )*(AXIS_SIZE+1)] = m_x[i + (AXIS_SIZE + 2 )*(AXIS_SIZE)];
+		m_x[i*(AXIS_SIZE + 2)] = m_x[(i+1)*(AXIS_SIZE + 2)];
+		m_x[i*(AXIS_SIZE + 2)+ AXIS_SIZE+1] = m_x[(i)*(AXIS_SIZE + 2)+ AXIS_SIZE];
+		}
+
+		m_x[0] = 0.5f*(m_x[1] + m_x[AXIS_SIZE + 2]);
+		m_x[AXIS_SIZE + 1] = 0.5f*(m_x[AXIS_SIZE] + m_x[2*AXIS_SIZE + 3 ]);
+		m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)] = 0.5f*(m_x[(AXIS_SIZE + 2)*(AXIS_SIZE)] + m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)+1]);
+		m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+2)] = 0.5f*(m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+2)-1] + m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)-1]);
+
     }
-    m_x[IX(0, 0)] = 0.5f * (m_x[IX(1, 0)] + m_x[IX(0, 1)]);
-    m_x[IX(0, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(1, AXIS_SIZE + 1)] + m_x[IX(0, AXIS_SIZE)]);
-    m_x[IX(AXIS_SIZE + 1, 0)] = 0.5f * (m_x[IX(AXIS_SIZE, 0)] + m_x[IX(AXIS_SIZE + 1, 1)]);
-    m_x[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(AXIS_SIZE, AXIS_SIZE + 1)] + m_x[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
-  }
     auto _M_diffuse() -> void
     {
         float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
