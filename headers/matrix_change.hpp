@@ -104,11 +104,11 @@ private:
 	
 		for (size_t i = 1; i <= AXIS_SIZE; i++) {
 		
-		m_x[i] = m_x[i + AXIS_SIZE + 2];
-		[[maybe_unused]] int c = b + 1 ;
-		m_x[i + (AXIS_SIZE + 2 )*(AXIS_SIZE+1)] = m_x[i + (AXIS_SIZE + 2 )*(AXIS_SIZE)];
-		m_x[i*(AXIS_SIZE + 2)] = m_x[(i+1)*(AXIS_SIZE + 2)];
-		m_x[i*(AXIS_SIZE + 2)+ AXIS_SIZE+1] = m_x[(i)*(AXIS_SIZE + 2)+ AXIS_SIZE];
+            m_x[i] = m_x[i + AXIS_SIZE + 2];
+            [[maybe_unused]] int c = b + 1 ;
+            m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE)+1] = m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE-1)+1];
+            m_x[i*(AXIS_SIZE + 2)-1] = m_x[(i)*(AXIS_SIZE + 2)];
+            m_x[i*(AXIS_SIZE + 2)+ AXIS_SIZE] = m_x[(i)*(AXIS_SIZE + 2)+ AXIS_SIZE-1];
 		}
 
 		m_x[0] = 0.5f*(m_x[1] + m_x[AXIS_SIZE + 2]);
