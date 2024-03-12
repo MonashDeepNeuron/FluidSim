@@ -6,7 +6,6 @@
 #include <fmt/core.h>
 
 #include <array>
-#include <cstddef>
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -68,7 +67,7 @@ public:
         // _M_add_source();
         swap(m_x0, m_x);
         _M_diffuse();
-        // test_display();
+        test_display();
         swap(m_x0, m_x);
         _M_advect();
     }
@@ -77,8 +76,8 @@ public:
     {
         fmt::println("Size {}", static_cast<int>(m_x.size()));
 
-        for (int i = 0; i < AXIS_SIZE + 2; ++i) {
-            for (int j = 0; j < AXIS_SIZE + 2; ++j) {
+        for (size_t i = 0; i < AXIS_SIZE + 2; ++i) {
+            for (size_t j = 0; j < AXIS_SIZE + 2; ++j) {
                 fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
             }
 
