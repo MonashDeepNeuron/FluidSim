@@ -75,8 +75,7 @@ auto main() -> int
     auto my_event_manager = EventManager(fluid_gui);
 
     // Main loop
-    // auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
-    auto ds = DensitySolver<BUFFER_SIZE>();
+    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
 
     // Example of one mouse click event
     // ds.add_density(1, 53);
