@@ -75,7 +75,8 @@ auto main() -> int
     auto my_event_manager = EventManager(fluid_gui);
 
     // Main loop
-    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
+    // auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
+    auto ds = DensitySolver<BUFFER_SIZE>();
 
     // Example of one mouse click event
     // ds.add_density(1, 53);
@@ -110,6 +111,7 @@ auto main() -> int
         // ds.add_density(1, 142);
         // ds.add_density(1, 289);
         // ds.add_density(1, 435);
+        // const std::array<float, BUFFER_SIZE> display_array = ds.x();
 
         fluid_gui.update_display(GreyScaleMatrixToSFML, ds.x());
 
