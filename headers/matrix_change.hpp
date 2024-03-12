@@ -67,7 +67,7 @@ public:
         // _M_add_source();
         swap(m_x0, m_x);
         _M_diffuse();
-        test_display();
+        // test_display();
         swap(m_x0, m_x);
         _M_advect();
     }
