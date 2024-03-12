@@ -31,7 +31,7 @@ public:
         // fmt::println("Mouse button pressed event received");
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            // fmt::println("Mouse left pressed");
+            fmt::println("Mouse left pressed");
 
             auto x = event.mouseButton.x / S_CELL_SIZE;
             auto y = event.mouseButton.y / S_CELL_SIZE;
@@ -41,7 +41,6 @@ public:
                 fmt::println("yes");
                 return 0;
             }
-
 
             return IX(static_cast<size_t>(y), static_cast<size_t>(x));
         }
@@ -70,10 +69,11 @@ public:
             auto x = mousePos.x / S_CELL_SIZE;
             auto y = mousePos.y / S_CELL_SIZE;
 
-            if (x <= 0 || y <= 0 || y >= S_AXIS_SIZE || x >= S_AXIS_SIZE) [[unlikely]] { // Don't do anything for boundary conditions
+            if (x <= 0 || y <= 0 || y >= S_AXIS_SIZE || x >= S_AXIS_SIZE) [[unlikely]] { 
                 fmt::println("Left mouse button was pressed at ({}, {})", x, y);
                 fmt::println("no");
                 return 0;
+
             }
             
             return IX(sign_cast(y), sign_cast(x));
