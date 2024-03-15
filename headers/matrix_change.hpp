@@ -106,15 +106,15 @@ private:
 		
             m_x[i] = m_x[i + AXIS_SIZE + 2];
             [[maybe_unused]] int c = b + 1 ;
-            m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE)+1] = m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE-1)+1];
-            m_x[i*(AXIS_SIZE + 2)-1] = m_x[(i)*(AXIS_SIZE + 2)];
-            m_x[i*(AXIS_SIZE + 2)+ AXIS_SIZE] = m_x[(i)*(AXIS_SIZE + 2)+ AXIS_SIZE-1];
+            m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE) + 1] = m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE-1)+1];
+            m_x[i*(AXIS_SIZE + 2)] = m_x[(i)*(AXIS_SIZE + 2)+1];
+            m_x[(i+1)*(AXIS_SIZE + 2) -1] = m_x[(i+1)*(AXIS_SIZE + 2)+ -2];
 		}
 
 		m_x[0] = 0.5f*(m_x[1] + m_x[AXIS_SIZE + 2]);
-		m_x[AXIS_SIZE + 1] = 0.5f*(m_x[AXIS_SIZE] + m_x[2*AXIS_SIZE + 3 ]);
-		m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)] = 0.5f*(m_x[(AXIS_SIZE + 2)*(AXIS_SIZE)] + m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)+1]);
-		m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+2)] = 0.5f*(m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+2)-1] + m_x[(AXIS_SIZE + 2)*(AXIS_SIZE+1)-1]);
+		m_x[AXIS_SIZE + 1] = 0.5f*(m_x[AXIS_SIZE] + m_x[2*AXIS_SIZE + 2 ]);
+		m_x[(AXIS_SIZE + 2)*(AXIS_SIZE)] = 0.5f*(m_x[(AXIS_SIZE + 2)*(AXIS_SIZE-1)] + m_x[(AXIS_SIZE + 2)*(AXIS_SIZE)+1]);
+		m_x[(AXIS_SIZE + 1)*(AXIS_SIZE+1)] = 0.5f*(m_x[(AXIS_SIZE + 1)*(AXIS_SIZE+1)-1] + m_x[(AXIS_SIZE + 1)*(AXIS_SIZE)]);
 
     }
     
