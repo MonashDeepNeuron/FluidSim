@@ -137,9 +137,9 @@ private:
     auto _M_advect() -> void
     {
         auto dt0 = m_dt * AXIS_SIZE;
-
-        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
-            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+        auto velEdgeEnd = 5;  // make it whatever you want
+        for (auto i = 1uL + velEdgeEnd ; i <= AXIS_SIZE - velEdgeEnd ; i++) {
+            for (auto j = 1uL + velEdgeEnd ; j <= AXIS_SIZE - velEdgeEnd ; j++) {
                 auto a = static_cast<float>(i) - dt0 * 0.051f;//m_u[IX(i, j)];
                 auto b = static_cast<float>(j) - dt0 * 0.05f;//m_v[IX(i, j)];
 
