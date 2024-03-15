@@ -107,7 +107,7 @@ private:
             [[maybe_unused]] int c = b + 1 ;
             m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE) + 1] = m_x[i + (AXIS_SIZE + 1 )*(AXIS_SIZE-1)+1];
             m_x[i*(AXIS_SIZE + 2)] = m_x[(i)*(AXIS_SIZE + 2)+1];
-            m_x[(i+1)*(AXIS_SIZE + 2) -1] = m_x[(i+1)*(AXIS_SIZE + 2)+ -2];
+            m_x[(i+1)*(AXIS_SIZE + 2) -1] = m_x[(i+1)*(AXIS_SIZE + 2)+ -2uL];
 		}
 
 		m_x[0] = 0.5f*(m_x[1] + m_x[AXIS_SIZE + 2]);
@@ -137,7 +137,7 @@ private:
     auto _M_advect() -> void
     {
         auto dt0 = m_dt * AXIS_SIZE;
-        auto velEdgeEnd = 5;  // make it whatever you want
+        auto velEdgeEnd = 5uL;  // make it whatever you want
         for (auto i = 1uL + velEdgeEnd ; i <= AXIS_SIZE - velEdgeEnd ; i++) {
             for (auto j = 1uL + velEdgeEnd ; j <= AXIS_SIZE - velEdgeEnd ; j++) {
                 auto a = static_cast<float>(i) - dt0 * 0.051f;//m_u[IX(i, j)];
