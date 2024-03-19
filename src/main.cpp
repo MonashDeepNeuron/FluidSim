@@ -55,6 +55,8 @@ auto main() -> int
         std::this_thread::sleep_for(ms(5));
 
         ds.dens_step();
+
+        my_event_manager.mouse_vel();
     }
 
     return 0;
