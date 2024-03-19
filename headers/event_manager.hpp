@@ -96,6 +96,9 @@ public:
 
 
             float distance = static_cast<float>(sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY)));
+
+            distance = std::clamp((distance - 520) / (600 - 520) * 0.05f, 0.0f, 0.05f);
+
             fmt::println("Distance moved: {}", distance);        
         }
 
