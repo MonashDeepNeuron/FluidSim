@@ -1,8 +1,9 @@
 #pragma once
 
 #include "utils.hpp"
-#include <fmt/core.h>
 #include "matrix_to_pixel.hpp"
+
+#include <fmt/core.h>
 
 #include <SFML/Graphics.hpp>
 

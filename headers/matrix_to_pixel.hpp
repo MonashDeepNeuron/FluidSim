@@ -3,6 +3,11 @@
 #include <array>
 #include <cmath>
 
+auto matrix_coords_to_greyscale_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape;
+auto matrix_coords_to_HSV_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape;
+
+namespace{ // Putting these methods in namespace makes them private.
+           // They are only used locally by the 2 functions (above) that we want to export.
 constexpr auto grey_scale(float value) -> sf::Uint8
 {
     return static_cast<sf::Uint8>(std::clamp(value, 0.0f, 1.0f) * 255);
@@ -48,6 +53,7 @@ auto HSV_to_RGB(float H, float S, float V) -> sf::Color
     }
 
     return sf::Color(static_cast<sf::Uint8>((Rs + m) * 255.0f), static_cast<sf::Uint8>((Gs + m) * 255.0f), static_cast<sf::Uint8>((Bs + m) * 255.0f));
+}
 }
 
 
