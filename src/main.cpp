@@ -47,10 +47,10 @@ auto main() -> int
         event_mouse_click = my_event_manager.check_left_mouse_button();
 
         if (event_mouse_click != 0) {
-            ds.add_density(10, event_mouse_click);
+            ds.add_density(3, event_mouse_click);
         }
 
-        fluid_gui.update_display(ds.x(), fluid_gui.get_current_draw_type());
+        fluid_gui.update_display(ds.x());
 
         std::this_thread::sleep_for(ms(5));
 

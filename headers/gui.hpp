@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <cmath>
 
 using std::size_t;
 
@@ -21,14 +22,13 @@ private:
     const std::string window_text = "Fluid Simulation";
     sf::RenderWindow window;
 
-public:
     enum class draw_type : short { GREY,
-        HSV,
-        VEL };
-
+    HSV,
+    VEL };
     draw_type current_draw_type = draw_type::GREY;
 
-    draw_type get_current_draw_type() const { return current_draw_type; }
+
+public:
     gui()
         : window(sf::VideoMode(screen_width, screen_height), window_text)
     {
@@ -73,10 +73,10 @@ public:
 
         return event;
     }
-    auto update_display(std::array<float, BUFFER_SIZE>& data, draw_type type) -> void
+    auto update_display(std::array<float, BUFFER_SIZE>& data) -> void
     {
         window.clear();
-        switch (type) {
+        switch (current_draw_type) {
         case draw_type::GREY:
             GreyScaleMatrixToSFML(data);
             break;
