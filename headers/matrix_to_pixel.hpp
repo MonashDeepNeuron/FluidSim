@@ -1,6 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <array>
+#include <cmath>
+
+constexpr auto grey_scale(float value) -> sf::Uint8
+{
+    return static_cast<sf::Uint8>(std::clamp(value, 0.0f, 1.0f) * 255);
+}
 
 
 auto HSV_to_RGB(float H, float S, float V) -> sf::Color
@@ -43,6 +49,8 @@ auto HSV_to_RGB(float H, float S, float V) -> sf::Color
 
     return sf::Color(static_cast<sf::Uint8>((Rs + m) * 255.0f), static_cast<sf::Uint8>((Gs + m) * 255.0f), static_cast<sf::Uint8>((Bs + m) * 255.0f));
 }
+
+
 /**
  * @brief This function takes in a density-matrix with values from 0-1 and
  * converts each value in the matrix to a value from 0-255 then prints it
@@ -51,42 +59,33 @@ auto HSV_to_RGB(float H, float S, float V) -> sf::Color
  * @param window
  * @param densityArray
  */
-auto GreyScaleMatrixToSFML(std::array<float, BUFFER_SIZE>& data) -> void
+auto matrix_coords_to_greyscale_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape
 {
-    for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
-        for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+    sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+    auto xpos = static_cast<float>(j * CELL_SIZE);
+    auto ypos = static_cast<float>(i * CELL_SIZE);
 
-            auto xpos = static_cast<float>(j * CELL_SIZE);
-            auto ypos = static_cast<float>(i * CELL_SIZE);
+    pixel.setPosition(xpos, ypos);
 
-            sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-            pixel.setPosition(xpos, ypos);
+    auto value = grey_scale(data.at(IX(i, j)));
 
-            auto value = grey_scale(data.at(IX(i, j)));
-
-            pixel.setFillColor(sf::Color(value, value, value));
-
-            window.draw(pixel);
-        }
-    }
+    pixel.setFillColor(sf::Color(value, value, value));
+    
+    return pixel;
 }
-    auto HSV_to_SFML(std::array<float, BUFFER_SIZE>& data) -> void
+
+auto matrix_coords_to_HSV_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape
 {
-    for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
-        for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+    sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+    auto xpos = static_cast<float>(j * CELL_SIZE);
+    auto ypos = static_cast<float>(i * CELL_SIZE);
 
-            auto xpos = static_cast<float>(j * CELL_SIZE);
-            auto ypos = static_cast<float>(i * CELL_SIZE);
+    pixel.setPosition(xpos, ypos);
 
-            sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
-            pixel.setPosition(xpos, ypos);
+    auto value = data.at(IX(i, j));
+    auto color = HSV_to_RGB(value * 360.0f, 1.0f, 1.0f); // Assuming value is in the range [0, 1]
 
-            auto value = data.at(IX(i, j));
-            auto color = HSV_to_RGB(value * 360.0f, 1.0f, 1.0f); // Assuming value is in the range [0, 1]
+    pixel.setFillColor(color);
 
-            pixel.setFillColor(color);
-
-            window.draw(pixel);
-        }
-    }
+    return pixel;
 }

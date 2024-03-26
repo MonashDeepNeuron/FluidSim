@@ -2,7 +2,7 @@
 
 #include "utils.hpp"
 #include <fmt/core.h>
-#include "to_SFML.hpp"
+#include "matrix_to_pixel.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -77,18 +77,30 @@ public:
     auto update_display(std::array<float, BUFFER_SIZE>& data) -> void
     {
         window.clear();
+
+        sf::RectangleShape (*draw_func)(std::array<float, BUFFER_SIZE>&, size_t, size_t);
+
+        // identify draw function
         switch (current_draw_type) {
-        case draw_type::GREY:
-            GreyScaleMatrixToSFML(data);
-            break;
-        case draw_type::HSV:
-            HSV_to_SFML(data);
-            break;
-        case draw_type::VEL:
-            HSV_to_SFML(data);
-            break;
-        default:
-            GreyScaleMatrixToSFML(data);
+            case draw_type::GREY:
+                draw_func = matrix_coords_to_greyscale_pixel;
+                break;
+            case draw_type::HSV:
+                draw_func = matrix_coords_to_HSV_pixel;
+                break;
+            case draw_type::VEL:
+                draw_func = matrix_coords_to_HSV_pixel;
+                break;
+            default:
+                draw_func = matrix_coords_to_greyscale_pixel;
+                break;
+        }
+        
+        // loop the matrix and apply the function to each pixel.
+        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
+            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+                window.draw(draw_func(data, i, j));
+            }
         }
         window.display();
     }
@@ -96,10 +108,5 @@ public:
     auto is_open() -> bool { return window.isOpen(); }
 
     auto getRenderWindow() -> sf::RenderWindow& { return window; }
-
-    constexpr auto grey_scale(float value) -> sf::Uint8
-    {
-        return static_cast<sf::Uint8>(std::clamp(value, 0.0f, 1.0f) * 255);
-    }
 
 };
