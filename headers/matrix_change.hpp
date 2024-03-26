@@ -136,7 +136,7 @@ private:
     }
     auto _M_diffuse() -> void
     {
-        float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
+    float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
 
         for (auto k = 0uL; k < 20uL; k++) {
             for (auto i = 1uL; i <= AXIS_SIZE; i++) {
@@ -285,34 +285,31 @@ private:
 
 
     auto _M_project() -> void {
-    
-    
-    float poop = static_cast<float>(AXIS_SIZE); // Cast AXIS_SIZE to float
-	auto h = 1.0f / poop;
-    for (auto i = 1uL; i <= AXIS_SIZE; i++) {
-        for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-            m_div[IX(i, j)] = -0.5 * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]);
-            m_p[IX(i, j)] = 0;
-        }
-    }
-    _M_set_bnd(1);
-    _M_set_bnd(2);
-    for (int k = 0; k < 20; k++) {
-        for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
+        auto h = 1.0 / AXIS_SIZE;
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                m_p[IX(i, j)] = (m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4;
+                m_div[IX(i, j)] = static_cast<float>(-0.5f * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]));
+                m_p[IX(i, j)] = 0;
             }
         }
+        _M_set_bnd(1);
         _M_set_bnd(2);
-    }
-    for (auto i = 1uL; i <= AXIS_SIZE; i++) {
-        for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-            m_u[IX(i, j)] -= 0.5 * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h;
-            m_v[IX(i, j)] -= 0.5 * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h;
+        for (auto k = 0; k < 20; k++) {
+            for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
+                for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                    m_p[IX(i, j)] =  static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
+                }
+            }
+            _M_set_bnd(2);
         }
-    }
-    _M_set_bnd(3);
-    _M_set_bnd(4);
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                m_u[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h);
+                m_v[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
+            }
+        }
+        _M_set_bnd(3);
+        _M_set_bnd(4);
 }
 
 private:
