@@ -21,30 +21,33 @@ public:
     using array_t = std::array<T, BUFFER_SZ>;
 
 public:
-    DensitySolver()
-        : m_diffuse_changer { 20 }
-        , m_diff { 0.0f }
-        , m_dt { 0.0f }
-        , m_u { 0.51f }
-        , m_v { 0.0f }
-        , m_x0 { 0.0f }
-        , m_x { 0.0f }
-        , m_div { 0.0f }
-        , m_p { 0.0f }
-    {
-    }
+    // DensitySolver()
+    //     : m_diffuse_changer { 20 }
+    //     , m_diff { 0.0f }
+    //     , m_dt { 0.0f }
+    //     , m_u { 0.51f }
+    //     , m_v { 0.0f }
+    //     , m_x0 { 0.0f }
+    //     , m_x { 0.0f }
+    //     , m_div { 0.0f }
+    //     , m_p { 0.0f }
+    // {
+    // }
 
     DensitySolver(float diff, float dt, float visc)
         : m_diffuse_changer { 20 }
         , m_diff { diff }
         , m_dt { dt }
+        , m_visc { visc }
         , m_u { 0.51f }
         , m_v { 1.01f }
         , m_x0 { 0.0f }
-        , m_x { 0.0f }
+        , m_v0 { 0.0f }
         , m_div { 0.0f }
         , m_p { 0.0f }
-        , m_visc { visc }
+        , m_x { 0.0f }
+        
+
     {
     }
 
@@ -163,7 +166,7 @@ private:
         }
     } 
 
-    auto _v_diffuse() -> void
+    auto _M_v_diffuse() -> void
     {
         float a = m_dt * m_visc * AXIS_SIZE * AXIS_SIZE;
 
@@ -283,31 +286,33 @@ private:
 
     auto _M_project() -> void {
     
-	float h = 1.0 / AXIS_SIZE;
-    for (int i = 1; i <= AXIS_SIZE; i++) {
-        for (int j = 1; j <= AXIS_SIZE; j++) {
-            m_div[IX(i, j)] = -0.5 * h * (u[IX(i + 1, j)] - u[IX(i - 1, j)] + v[IX(i, j + 1)] - v[IX(i, j - 1)]);
+    
+    float poop = static_cast<float>(AXIS_SIZE); // Cast AXIS_SIZE to float
+	float h = 1.0f / poop;
+    for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+        for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+            m_div[IX(i, j)] = -0.5 * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]);
             m_p[IX(i, j)] = 0;
         }
     }
     _M_set_bnd(1);
     _M_set_bnd(2);
     for (int k = 0; k < 20; k++) {
-        for (int i = 1; i <= AXIS_SIZE; i++) {
-            for (int j = 1; j <= AXIS_SIZE; j++) {
+        for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                 m_p[IX(i, j)] = (m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4;
             }
         }
         _M_set_bnd(2);
     }
-    for (int i = 1; i <= AXIS_SIZE; i++) {
-        for (int j = 1; j <= AXIS_SIZE; j++) {
+    for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+        for (auto j = 1uL; j <= AXIS_SIZE; j++) {
             m_u[IX(i, j)] -= 0.5 * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h;
-            n_v[IX(i, j)] -= 0.5 * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h;
+            m_v[IX(i, j)] -= 0.5 * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h;
         }
     }
-    set_bnd(3);
-    set_bnd(4);
+    _M_set_bnd(3);
+    _M_set_bnd(4);
 }
 
 private:

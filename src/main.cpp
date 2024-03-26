@@ -55,6 +55,7 @@ auto main() -> int
         std::this_thread::sleep_for(ms(5));
 
         ds.dens_step();
+        ds.velocity_step();
     }
 
     return 0;
