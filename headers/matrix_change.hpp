@@ -288,7 +288,7 @@ private:
     
     
     float poop = static_cast<float>(AXIS_SIZE); // Cast AXIS_SIZE to float
-	float h = 1.0f / poop;
+	auto h = 1.0f / poop;
     for (auto i = 1uL; i <= AXIS_SIZE; i++) {
         for (auto j = 1uL; j <= AXIS_SIZE; j++) {
             m_div[IX(i, j)] = -0.5 * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]);
