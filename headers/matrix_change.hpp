@@ -285,7 +285,7 @@ private:
 
 
     auto _M_project() -> void {
-        auto h = 1.0 / AXIS_SIZE;
+        auto const h = 1.0f / AXIS_SIZE;
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                 m_div[IX(i, j)] = static_cast<float>(-0.5f * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]));
