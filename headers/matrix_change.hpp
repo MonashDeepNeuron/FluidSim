@@ -53,6 +53,26 @@ public:
         return m_x;
     }
 
+    auto u() -> array_t<float>&
+    {
+        return m_u;
+    }
+
+    auto u() const -> array_t<float> const&
+    {
+        return m_u;
+    }
+
+    auto v() -> array_t<float>&
+    {
+        return m_v;
+    }
+
+    auto v() const -> array_t<float> const&
+    {
+        return m_v;
+    }
+
     auto add_density(float d, size_t index) -> size_t
     {
         m_x[index] = d;
