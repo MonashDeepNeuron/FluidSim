@@ -34,7 +34,7 @@ auto main() -> int
     // auto printing = sfml_printing();
 
     // Main loop
-    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
+    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f);
 
     auto event_mouse_click = 0uL;
 
