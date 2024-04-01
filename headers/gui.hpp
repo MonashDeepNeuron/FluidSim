@@ -17,8 +17,8 @@ using std::size_t;
 
 class gui {
 private:
-    static constexpr size_t screen_width = (AXIS_SIZE + 2) * CELL_SIZE;
-    static constexpr size_t screen_height = (AXIS_SIZE + 2) * CELL_SIZE;
+    static constexpr size_t screen_width = (AXIS_SIZE) * CELL_SIZE;
+    static constexpr size_t screen_height = (AXIS_SIZE) * CELL_SIZE;
     static constexpr size_t frame_limit = 144;
 
     const std::string window_text = "Fluid Simulation";
@@ -119,11 +119,11 @@ public:
      */
     auto GreyScaleMatrixToSFML(std::array<float, BUFFER_SIZE>& data) -> void
     {
-        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
-            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+        for (size_t i = 1uL; i <= AXIS_SIZE; i++) {
+            for (size_t j = 1uL; j <= AXIS_SIZE; j++) {
 
-                auto xpos = static_cast<float>(j * CELL_SIZE);
-                auto ypos = static_cast<float>(i * CELL_SIZE);
+                auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
+                auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
                 sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
                 pixel.setPosition(xpos, ypos);
@@ -139,11 +139,11 @@ public:
 
     auto HSV_to_SFML(std::array<float, BUFFER_SIZE>& data) -> void
     {
-        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
-            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+        for (size_t i = 1uL; i <= AXIS_SIZE; i++) {
+            for (size_t j = 1uL; j <= AXIS_SIZE; j++) {
 
-                auto xpos = static_cast<float>(j * CELL_SIZE);
-                auto ypos = static_cast<float>(i * CELL_SIZE);
+                auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
+                auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
                 sf::RectangleShape pixel(sf::Vector2f(CELL_SIZE, CELL_SIZE));
                 pixel.setPosition(xpos, ypos);
@@ -205,11 +205,11 @@ public:
       // std::default_random_engine generator;
       // std::uniform_real_distribution<float> distribution(0.0, 360.0);
 
-        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i += 7) {
-            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j += 7) {
+        for (size_t i = 1uL; i <= AXIS_SIZE; i += 7) {
+            for (size_t j = 1uL; j <= AXIS_SIZE; j += 7) {
 
-            auto xpos = static_cast<float>(j * CELL_SIZE);
-            auto ypos = static_cast<float>(i * CELL_SIZE);
+            auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
+            auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
             [[maybe_unused]] auto u = u_data.at(IX(i, j));
             [[maybe_unused]] auto v = v_data.at(IX(i, j));

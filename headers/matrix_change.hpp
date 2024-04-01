@@ -143,18 +143,42 @@ private:
         }
     }
 
-    void _M_set_bnd(int b) {
-    for (size_t i = 1; i <= AXIS_SIZE; i++) {
-        m_x[IX(0, i)] = b == 1 ? -m_x[IX(1, i)] : m_x[IX(1, i)];
-        m_x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -m_x[IX(AXIS_SIZE, i)] : m_x[IX(AXIS_SIZE, i)];
-        m_x[IX(i, 0)] = b == 2 ? -m_x[IX(i, 1)] : m_x[IX(i, 1)];
-        m_x[IX(i, AXIS_SIZE + 1)] = b == 2 ? -m_x[IX(i, AXIS_SIZE)] : m_x[IX(i, AXIS_SIZE)];
+    void _M_set_bnd( [[maybe_unused]] int b, array_t<float> &arr) {
+    // for (size_t i = 1; i <= AXIS_SIZE; i++) {
+    //     arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
+    //     arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
+    //     arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
+    //     arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
+    // }
+    // arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
+    // arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
+    // arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
+    // arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+        
+    // Set the first and last row to 0
+
+    for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
+        arr[IX(i, 0)] = 0;
+        arr[IX(i, AXIS_SIZE + 1)] = 0;
     }
-    m_x[IX(0, 0)] = 0.5f * (m_x[IX(1, 0)] + m_x[IX(0, 1)]);
-    m_x[IX(0, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(1, AXIS_SIZE + 1)] + m_x[IX(0, AXIS_SIZE)]);
-    m_x[IX(AXIS_SIZE + 1, 0)] = 0.5f * (m_x[IX(AXIS_SIZE, 0)] + m_x[IX(AXIS_SIZE + 1, 1)]);
-    m_x[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (m_x[IX(AXIS_SIZE, AXIS_SIZE + 1)] + m_x[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+    
+    b = 0;
+
+    // Set the first and last column to 0
+    for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
+        arr[IX(0, j)] = 0;
+        arr[IX(AXIS_SIZE + 1, j)] = 0;
+        
     }
+
+    // Set the corners to 0
+    arr[IX(0, 0)] = 0;
+    arr[IX(0, AXIS_SIZE + 1)] = 0;
+    arr[IX(AXIS_SIZE + 1, 0)] = 0;
+    arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0;
+        
+}
+
     auto _M_diffuse() -> void
     {
     float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
@@ -167,7 +191,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(0, m_x);
         }
     }
 
@@ -183,7 +207,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(1, m_u);
         }
     } 
 
@@ -199,7 +223,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(2, m_v);
         }
     }
 
@@ -236,7 +260,7 @@ private:
                 // fmt::println("");
         }
 
-        _M_set_bnd(0);
+        _M_set_bnd(0, m_x);
     }
 
     auto _M_u_advect() -> void
@@ -269,7 +293,7 @@ private:
             }
         }
 
-        _M_set_bnd(3);
+        _M_set_bnd(1, m_u);
     }
 
     auto _M_v_advect() -> void
@@ -305,7 +329,7 @@ private:
                 // fmt::println("");
         }
 
-        _M_set_bnd(4);
+        _M_set_bnd(2, m_v);
     }
 
 
@@ -319,15 +343,17 @@ private:
                 m_p[IX(i, j)] = 0;
             }
         }
-        _M_set_bnd(1);
-        _M_set_bnd(2);
+        
+        _M_set_bnd(0, m_div);
+        _M_set_bnd(0, m_p);
+        
         for (auto k = 0; k < 20; k++) {
             for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
                 for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                     m_p[IX(i, j)] =  static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
                 }
             }
-            _M_set_bnd(2);
+            _M_set_bnd(0, m_p);
         }
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
@@ -335,8 +361,8 @@ private:
                 m_v[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
             }
         }
-        _M_set_bnd(3);
-        _M_set_bnd(4);
+        _M_set_bnd(1, m_u);
+        _M_set_bnd(2, m_v);
 
 }
 
