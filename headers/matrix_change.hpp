@@ -118,7 +118,7 @@ public:
 
     auto test_display() -> void
     {
-        fmt::println("Size {}", static_cast<int>(m_x.size()));
+        // fmt::println("Size {}", static_cast<int>(m_x.size()));
 
         for (size_t i = 0; i < AXIS_SIZE + 2; ++i) {
             for (size_t j = 0; j < AXIS_SIZE + 2; ++j) {
@@ -128,7 +128,7 @@ public:
             fmt::print("\n");
         }
 
-        fmt::print("\n\n");
+        // fmt::print("\n\n");
     }
 
 private:
@@ -209,8 +209,8 @@ private:
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                fmt::print("m_v[IX({}, {})]: {}; ",i, j, m_v[IX(i, j)]);
-                fmt::print("m_u[IX({}, {})]: {}",i, j, m_u[IX(i, j)]);
+                // fmt::print("m_v[IX({}, {})]: {}; ",i, j, m_v[IX(i, j)]);
+                // fmt::print("m_u[IX({}, {})]: {}",i, j, m_u[IX(i, j)]);
                 auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
                 auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
 
@@ -233,7 +233,7 @@ private:
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
                 
             }
-                fmt::println("");
+                // fmt::println("");
         }
 
         _M_set_bnd(0);
