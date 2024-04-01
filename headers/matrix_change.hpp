@@ -143,7 +143,7 @@ private:
         }
     }
 
-    void _M_set_bnd(int b) {
+    void _M_set_bnd(int b, array_t<float> m_x) {
     for (size_t i = 1; i <= AXIS_SIZE; i++) {
         m_x[IX(0, i)] = b == 1 ? -m_x[IX(1, i)] : m_x[IX(1, i)];
         m_x[IX(AXIS_SIZE + 1, i)] = b == 1 ? -m_x[IX(AXIS_SIZE, i)] : m_x[IX(AXIS_SIZE, i)];
@@ -167,7 +167,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(0, m_x);
         }
     }
 
@@ -183,7 +183,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(2, m_u);
         }
     } 
 
@@ -199,7 +199,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0);
+            _M_set_bnd(1, m_v);
         }
     }
 
@@ -236,7 +236,7 @@ private:
                 fmt::println("");
         }
 
-        _M_set_bnd(0);
+        _M_set_bnd(0,m_x);
     }
 
     auto _M_u_advect() -> void
@@ -269,7 +269,7 @@ private:
             }
         }
 
-        _M_set_bnd(3);
+        _M_set_bnd(2,m_u);
     }
 
     auto _M_v_advect() -> void
@@ -305,7 +305,7 @@ private:
                 // fmt::println("");
         }
 
-        _M_set_bnd(4);
+        _M_set_bnd(1, m_v);
     }
 
 
@@ -319,15 +319,15 @@ private:
                 m_p[IX(i, j)] = 0;
             }
         }
-        _M_set_bnd(1);
-        _M_set_bnd(2);
+        _M_set_bnd(0,m_div);
+        _M_set_bnd(0,m_p);
         for (auto k = 0; k < 20; k++) {
             for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
                 for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                     m_p[IX(i, j)] =  static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
                 }
             }
-            _M_set_bnd(2);
+            _M_set_bnd(0, m_p);
         }
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
@@ -335,8 +335,8 @@ private:
                 m_v[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
             }
         }
-        _M_set_bnd(3);
-        _M_set_bnd(4);
+        _M_set_bnd(2, m_u);
+        _M_set_bnd(1, m_v);
 
 }
 
