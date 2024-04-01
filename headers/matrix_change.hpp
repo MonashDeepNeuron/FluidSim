@@ -34,15 +34,16 @@ public:
     // {
     // }
 
-    DensitySolver(float diff, float dt, float visc)
+    DensitySolver(float diff, float dt, float visc, array_t<float> u_arr, array_t<float> v_arr)
         : m_diffuse_changer { 20 }
         , m_diff { diff }
         , m_dt { dt }
         , m_visc { visc }
-        , m_u { 0.51f }
-        , m_v { 1.01f }
-        , m_x0 { 0.0f }
+        , m_u { u_arr}
+        , m_v { v_arr }
         , m_v0 { 0.0f }
+        , m_u0 { 0.0f }
+        , m_x0 { 0.0f }
         , m_div { 0.0f }
         , m_p { 0.0f }
         , m_x { 0.0f }
@@ -188,6 +189,8 @@ private:
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                fmt::print("m_v[IX({}, {})]: {}; ",i, j, m_v[IX(i, j)]);
+                fmt::print("m_u[IX({}, {})]: {}",i, j, m_u[IX(i, j)]);
                 auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
                 auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
 
@@ -210,6 +213,7 @@ private:
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
                 
             }
+                fmt::println("");
         }
 
         _M_set_bnd(0);
@@ -256,6 +260,8 @@ private:
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                 auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
                 auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
+                
+                // fmt::print("m_v[IX({}, {})] {}",i, j, m_v[IX(i, j)]);
 
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
@@ -276,6 +282,7 @@ private:
                 m_v[IX(i, j)] = s0 * (t0 * m_v0[IX(i0, j0)] + t1 * m_v0[IX(i0, j1)]) + s1 * (t0 * m_v0[IX(i1, j0)] + t1 * m_v0[IX(i1, j1)]);
                 
             }
+                // fmt::println("");
         }
 
         _M_set_bnd(4);
@@ -310,6 +317,7 @@ private:
         }
         _M_set_bnd(3);
         _M_set_bnd(4);
+
 }
 
 private:
@@ -321,9 +329,9 @@ private:
 
     array_t<float> m_u;
     array_t<float> m_v;
-    array_t<float> m_x0;
     array_t<float> m_v0;
     array_t<float> m_u0;
+    array_t<float> m_x0;
     array_t<float> m_div;
     array_t<float> m_p;
 
