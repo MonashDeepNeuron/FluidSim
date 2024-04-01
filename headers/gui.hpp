@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include <cmath>
 
 #include <random>
 
@@ -23,14 +24,13 @@ private:
     const std::string window_text = "Fluid Simulation";
     sf::RenderWindow window;
 
-public:
     enum class draw_type : short { GREY,
-        HSV,
-        VEL };
-
+    HSV,
+    VEL };
     draw_type current_draw_type = draw_type::GREY;
 
-    draw_type get_current_draw_type() const { return current_draw_type; }
+
+public:
     gui()
     {
         //Used in order to smooth the vector field arrows
@@ -82,7 +82,7 @@ public:
     auto update_display(std::array<float, BUFFER_SIZE>& x_data, std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data, draw_type type) -> void
     {
         window.clear();
-        switch (type) {
+        switch (current_draw_type) {
         case draw_type::GREY:
             GreyScaleMatrixToSFML(x_data);
             break;

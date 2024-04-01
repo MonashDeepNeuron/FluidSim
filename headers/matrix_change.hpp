@@ -21,25 +21,34 @@ public:
     using array_t = std::array<T, BUFFER_SZ>;
 
 public:
-    DensitySolver()
-        : m_diffuse_changer { 20 }
-        , m_diff { 0.0f }
-        , m_dt { 0.0f }
-        , m_u { 0.51f }
-        , m_v { 0.0f }
-        , m_x0 { 0.0f }
-        , m_x { 0.0f }
-    {
-    }
+    // DensitySolver()
+    //     : m_diffuse_changer { 20 }
+    //     , m_diff { 0.0f }
+    //     , m_dt { 0.0f }
+    //     , m_u { 0.51f }
+    //     , m_v { 0.0f }
+    //     , m_x0 { 0.0f }
+    //     , m_x { 0.0f }
+    //     , m_div { 0.0f }
+    //     , m_p { 0.0f }
+    // {
+    // }
 
-    DensitySolver(float diff, float dt)
+    DensitySolver(float diff, float dt, float visc, array_t<float> u_arr, array_t<float> v_arr)
         : m_diffuse_changer { 20 }
         , m_diff { diff }
         , m_dt { dt }
-        , m_u { 0.51f }
-        , m_v { 1.01f }
+        , m_visc { visc }
+        , m_u { u_arr}
+        , m_v { v_arr }
+        , m_v0 { 0.0f }
+        , m_u0 { 0.0f }
         , m_x0 { 0.0f }
+        , m_div { 0.0f }
+        , m_p { 0.0f }
         , m_x { 0.0f }
+        
+
     {
     }
 
@@ -92,6 +101,21 @@ public:
         _M_advect();
     }
 
+    auto velocity_step() -> void
+    {
+        swap(m_u0,m_u);
+        swap(m_v0,m_v);
+
+        _M_u_diffuse();
+        _M_v_diffuse(); 
+        _M_project();
+
+        swap(m_u0,m_u);
+        swap(m_v0,m_v);
+
+
+    }
+
     auto test_display() -> void
     {
         fmt::println("Size {}", static_cast<int>(m_x.size()));
@@ -133,7 +157,7 @@ private:
     }
     auto _M_diffuse() -> void
     {
-        float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
+    float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
 
         for (auto k = 0uL; k < 20uL; k++) {
             for (auto i = 1uL; i <= AXIS_SIZE; i++) {
@@ -143,7 +167,39 @@ private:
                 }
             }
 
-            _M_set_bnd(2);
+            _M_set_bnd(0);
+        }
+    }
+
+    auto _M_u_diffuse() -> void
+    {
+        float a = m_dt * m_visc * AXIS_SIZE * AXIS_SIZE;
+
+        for (auto k = 0uL; k < 20uL; k++) {
+            for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+                for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                    auto index = i + (AXIS_SIZE + 2) * j;
+                    m_u[index] = (m_u0[index] + a * (m_u[index - 1] + m_u[index + 1] + m_u[index - AXIS_SIZE - 2] + m_u[index + AXIS_SIZE + 2])) / (1 + 4 * a);
+                }
+            }
+
+            _M_set_bnd(0);
+        }
+    } 
+
+    auto _M_v_diffuse() -> void
+    {
+        float a = m_dt * m_visc * AXIS_SIZE * AXIS_SIZE;
+
+        for (auto k = 0uL; k < 20uL; k++) {
+            for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+                for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                    auto index = i + (AXIS_SIZE + 2) * j;
+                    m_v[index] = (m_v0[index] + a * (m_v[index - 1] + m_v[index + 1] + m_v[index - AXIS_SIZE - 2] + m_v[index + AXIS_SIZE + 2])) / (1 + 4 * a);
+                }
+            }
+
+            _M_set_bnd(0);
         }
     }
 
@@ -153,8 +209,10 @@ private:
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                auto a = static_cast<float>(i) - dt0 * 0.051f;//m_u[IX(i, j)];
-                auto b = static_cast<float>(j) - dt0 * 0.05f;//m_v[IX(i, j)];
+                fmt::print("m_v[IX({}, {})]: {}; ",i, j, m_v[IX(i, j)]);
+                fmt::print("m_u[IX({}, {})]: {}",i, j, m_u[IX(i, j)]);
+                auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
+                auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
 
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
@@ -175,20 +233,128 @@ private:
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
                 
             }
+                fmt::println("");
         }
 
         _M_set_bnd(0);
     }
+
+    auto _M_u_advect() -> void
+    {
+        auto dt0 = m_dt * AXIS_SIZE;
+
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
+                auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
+
+                // Clamp values to ensure they stay within bounds
+                a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
+                b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
+                
+                auto i0 = static_cast<size_t>(a);
+                auto i1 = i0 + 1;
+                auto j0 = static_cast<size_t>(b);
+                auto j1 = j0 + 1;
+
+                auto s1 = a - static_cast<float>(i0);
+                auto s0 = 1 - s1;
+                auto t1 = b - static_cast<float>(j0);
+                auto t0 = 1 - t1;
+                
+
+
+                m_u[IX(i, j)] = s0 * (t0 * m_u0[IX(i0, j0)] + t1 * m_u0[IX(i0, j1)]) + s1 * (t0 * m_u0[IX(i1, j0)] + t1 * m_u0[IX(i1, j1)]);
+                
+            }
+        }
+
+        _M_set_bnd(3);
+    }
+
+    auto _M_v_advect() -> void
+    {
+        auto dt0 = m_dt * AXIS_SIZE;
+
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
+                auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
+                
+                // fmt::print("m_v[IX({}, {})] {}",i, j, m_v[IX(i, j)]);
+
+                // Clamp values to ensure they stay within bounds
+                a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
+                b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
+                
+                auto i0 = static_cast<size_t>(a);
+                auto i1 = i0 + 1;
+                auto j0 = static_cast<size_t>(b);
+                auto j1 = j0 + 1;
+
+                auto s1 = a - static_cast<float>(i0);
+                auto s0 = 1 - s1;
+                auto t1 = b - static_cast<float>(j0);
+                auto t0 = 1 - t1;
+                
+
+
+                m_v[IX(i, j)] = s0 * (t0 * m_v0[IX(i0, j0)] + t1 * m_v0[IX(i0, j1)]) + s1 * (t0 * m_v0[IX(i1, j0)] + t1 * m_v0[IX(i1, j1)]);
+                
+            }
+                // fmt::println("");
+        }
+
+        _M_set_bnd(4);
+    }
+
+
+
+
+    auto _M_project() -> void {
+        auto const h = 1.0f / AXIS_SIZE;
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                m_div[IX(i, j)] = static_cast<float>(-0.5f * h * (m_u[IX(i + 1, j)] - m_u[IX(i - 1, j)] + m_v[IX(i, j + 1)] - m_v[IX(i, j - 1)]));
+                m_p[IX(i, j)] = 0;
+            }
+        }
+        _M_set_bnd(1);
+        _M_set_bnd(2);
+        for (auto k = 0; k < 20; k++) {
+            for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
+                for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                    m_p[IX(i, j)] =  static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
+                }
+            }
+            _M_set_bnd(2);
+        }
+        for (auto i = 1uL; i <= AXIS_SIZE; i++) {
+            for (auto j = 1uL; j <= AXIS_SIZE; j++) {
+                m_u[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h);
+                m_v[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
+            }
+        }
+        _M_set_bnd(3);
+        _M_set_bnd(4);
+
+}
 
 private:
     int m_diffuse_changer;
 
     float m_diff;
     float m_dt;
+    float m_visc;
 
     array_t<float> m_u;
     array_t<float> m_v;
+    array_t<float> m_v0;
+    array_t<float> m_u0;
     array_t<float> m_x0;
+    array_t<float> m_div;
+    array_t<float> m_p;
+
 
     // Final array to display
     array_t<float> m_x;

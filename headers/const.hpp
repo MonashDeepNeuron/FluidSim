@@ -7,7 +7,7 @@ using std::size_t;
 using s_size_t = std::make_signed_t<size_t>;
 
 // Unsigned versions of programs base defaults
-constexpr size_t AXIS_SIZE = 150;
+constexpr size_t AXIS_SIZE = 80;
 constexpr size_t BUFFER_SIZE = (AXIS_SIZE + 2) * (AXIS_SIZE + 2);
 constexpr size_t CELL_SIZE = 5;
 
