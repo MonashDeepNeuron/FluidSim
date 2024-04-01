@@ -46,6 +46,8 @@ public:
         window.setFramerateLimit(frame_limit);
     }
 
+    draw_type get_current_draw_type() const { return current_draw_type; }
+
     auto check_event() -> sf::Event
     {
         sf::Event event {};
@@ -79,21 +81,21 @@ public:
 
         return event;
     }
-    auto update_display(std::array<float, BUFFER_SIZE>& x_data, std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data, draw_type type) -> void
+    auto update_display(std::array<float, BUFFER_SIZE>& x_data, std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data) -> void
     {
         window.clear();
         switch (current_draw_type) {
-        case draw_type::GREY:
-            GreyScaleMatrixToSFML(x_data);
-            break;
-        case draw_type::HSV:
-            HSV_to_SFML(x_data);
-            break;
-        case draw_type::VEL:
-            VEL_to_SFML(u_data, v_data);
-            break;
-        default:
-            GreyScaleMatrixToSFML(x_data);
+            case draw_type::GREY:
+                GreyScaleMatrixToSFML(x_data);
+                break;
+            case draw_type::HSV:
+                HSV_to_SFML(x_data);
+                break;
+            case draw_type::VEL:
+                VEL_to_SFML(u_data, v_data);
+                break;
+            default:
+                GreyScaleMatrixToSFML(x_data);
         }
         window.display();
     }

@@ -37,7 +37,7 @@ auto main() -> int
     std::array<float, BUFFER_SIZE> u_arr;
     std::array<float, BUFFER_SIZE> v_arr;
     u_arr.fill(0.02f);
-    v_arr.fill(0.01f);
+    v_arr.fill(0.1f);
     auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f, u_arr, v_arr);
 
     auto event_mouse_click = 0uL;
@@ -54,7 +54,7 @@ auto main() -> int
             ds.add_density(10, event_mouse_click);
         }
 
-        fluid_gui.update_display(ds.x(), ds.u(), ds.v(), fluid_gui.get_current_draw_type());
+        fluid_gui.update_display(ds.x(), ds.u(), ds.v());
 
         std::this_thread::sleep_for(ms(5));
 
