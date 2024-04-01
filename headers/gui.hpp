@@ -203,8 +203,8 @@ public:
       // std::default_random_engine generator;
       // std::uniform_real_distribution<float> distribution(0.0, 360.0);
 
-        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i += 3) {
-            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j += 3) {
+        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i += 7) {
+            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j += 7) {
 
             auto xpos = static_cast<float>(j * CELL_SIZE);
             auto ypos = static_cast<float>(i * CELL_SIZE);
@@ -220,12 +220,22 @@ public:
             theta = -theta; // Adjust for SFML's clockwise rotations
             if (theta < 0) theta += 2 * static_cast<float>(M_PI); // Normalize to the range [0, 2π)
 
-            sf::ConvexShape arrow;
-            arrow.setPointCount(3);
 
-            arrow.setPoint(0, sf::Vector2f(CELL_SIZE / 2, 0)); // Top point (head)
-            arrow.setPoint(1, sf::Vector2f(0, CELL_SIZE)); // Bottom left point (tail)
-            arrow.setPoint(2, sf::Vector2f(CELL_SIZE, CELL_SIZE)); // Bottom right point (tail)
+            sf::ConvexShape arrow;
+            arrow.setPointCount(4); // 3 points for the arrow shape (isosceles triangle)
+
+            // Calculate points for the arrow shape
+            sf::Vector2f topPoint(CELL_SIZE * 2, 0); // Top point of the triangle
+            sf::Vector2f leftPoint(0, CELL_SIZE * 2); // Left point of the triangle
+            sf::Vector2f centerPoint(CELL_SIZE * 2, 0); // Center point of
+            sf::Vector2f rightPoint(CELL_SIZE * 4, CELL_SIZE * 2); // Right point of the triangle
+
+            // Set the points of the arrow
+            arrow.setPoint(0, topPoint);
+            arrow.setPoint(1, leftPoint);
+            arrow.setPoint(2, centerPoint);
+            arrow.setPoint(3, rightPoint);
+
 
             arrow.setFillColor(sf::Color::White); 
 
@@ -233,11 +243,14 @@ public:
             // float random_angle = distribution(generator); // Generate a random angle
             // arrow.setRotation(random_angle); // Rotate the arrow
 
-            arrow.setPosition(xpos + static_cast<float>(1.5) * CELL_SIZE, ypos + static_cast<float>(1.5) * CELL_SIZE); 
-            arrow.setOrigin(CELL_SIZE / 2, CELL_SIZE / 2);
+            // arrow.setPosition(xpos + static_cast<float>(1.5) * CELL_SIZE, ypos + static_cast<float>(1.5) * CELL_SIZE); 
+            // arrow.setOrigin(CELL_SIZE / 2, CELL_SIZE / 2);
 
-            // arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI))); // Rotate the arrow according to the direction of velocity 
-            arrow.setRotation(135);
+            arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
+            arrow.setOrigin(CELL_SIZE * 2, 0); // Set the origin to the base of the arrow
+
+            arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI))); // Rotate the arrow according to the direction of velocity 
+            // arrow.setRotation(135);
             window.draw(arrow);
 
             }
