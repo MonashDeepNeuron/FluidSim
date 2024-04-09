@@ -17,7 +17,7 @@ using std::size_t;
 class EventManager {
 private:
     gui& window;
-    sf::Mouse mouse_prev;
+    static sf::Vector2i prevPos;
 
 public:
     explicit EventManager(gui& windowRef)
@@ -84,7 +84,7 @@ public:
     }
 
     auto mouse_vel() -> int {
-      auto currPos = sf::Mouse::getPosition(window.getRenderWindow());
+      auto currPos = sf::Mouse::getPosition(window.getRenderWindow());      
 
       [[maybe_unused]] auto x_dirn = 1;
       [[maybe_unused]] auto y_dirn = 1;
@@ -93,13 +93,12 @@ public:
       auto y = currPos.y / S_CELL_SIZE;
 
       if (0 <= x && x <= S_AXIS_SIZE && 0 <= y && y <= S_AXIS_SIZE) [[likely]] {
+         if (currPos != prevPos) { // Check if it's not the first call
 
-        if (mouse_prev.getPosition() != sf::Vector2i(0, 0)) { // Check if it's not the first call
+            auto prevX = prevPos.x / S_CELL_SIZE;
+            auto prevY = prevPos.y / S_CELL_SIZE;   
 
-            auto prevX = mouse_prev.getPosition().x / S_CELL_SIZE;
-            auto prevY = mouse_prev.getPosition().y / S_CELL_SIZE;   
-
-            fmt::println("Previous mouse position: ({}, {})", prevX, prevY);
+            // fmt::println("Previous mouse position: ({}, {})", prevX, prevY);
 
             if (x - prevX < 0) {
               x_dirn = -1;
@@ -109,16 +108,14 @@ public:
               y_dirn = -1;
             }
 
+            auto x_dist = x_dirn * (x + prevX)^2;
+            auto y_dist = y_dirn * (y + prevY)^2;
 
-            float distance = static_cast<float>(sqrt((x - prevX) * (x - prevX) + (y - prevY) * (y - prevY)));
-            fmt::println("Distance moved: {}", distance);   
+            fmt::println("Distance moved: {}, {}", x_dist, y_dist);   
 
-            distance = std::clamp((distance - 520) / (600 - 520) * 0.05f, 0.0f, 0.05f);
+         }
 
-            // fmt::println("Distance moved: {}", distance);        
-        }
-
-        fmt::println("Current mouse position: ({}, {})", x, y);
+        prevPos = currPos;
 
       }
       return 0;
