@@ -366,6 +366,16 @@ private:
 
 }
 
+    auto add_velocity(float u, float v, size_t index) -> size_t
+    {   
+        m_u[index] += u;
+        m_v[index] += v;
+
+        return 0;
+    }
+
+    auto mouse_
+
 private:
     int m_diffuse_changer;
 
