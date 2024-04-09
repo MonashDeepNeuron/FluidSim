@@ -86,8 +86,8 @@ public:
     auto mouse_vel() -> int {
       auto currPos = sf::Mouse::getPosition(window.getRenderWindow());
 
-      auto x_dirn = 1;
-      auto y_dirn = 1;
+      [[maybe_unused]] auto x_dirn = 1;
+      [[maybe_unused]] auto y_dirn = 1;
 
       auto x = currPos.x / S_CELL_SIZE;
       auto y = currPos.y / S_CELL_SIZE;

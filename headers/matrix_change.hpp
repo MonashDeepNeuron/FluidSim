@@ -374,7 +374,7 @@ private:
         return 0;
     }
 
-    auto mouse_
+    
 
 private:
     int m_diffuse_changer;
