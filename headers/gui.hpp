@@ -43,7 +43,7 @@ public:
     auto check_event() -> sf::Event
     {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event)) { // while there are events in the queue
             // Handle the event
             if (event.type == sf::Event::Closed) {
                 window.close();
