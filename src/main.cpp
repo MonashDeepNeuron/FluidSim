@@ -36,8 +36,10 @@ auto main() -> int
     // Main loop
     std::array<float, BUFFER_SIZE> u_arr;
     std::array<float, BUFFER_SIZE> v_arr;
-    u_arr.fill(0.01f);
-    v_arr.fill(-0.03f);
+
+    u_arr.fill(0.1f);
+    v_arr.fill(0.1f);
+    
     auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f, u_arr, v_arr);
 
     auto event_mouse_click = 0uL;
@@ -45,7 +47,7 @@ auto main() -> int
     while (fluid_gui.is_open()) {
 
         // Check for events and handle them
-        [[maybe_unused]] auto event = fluid_gui.check_event();
+        fluid_gui.check_event();
 
         // event_mouse_click = my_event_manager.handle_event(event);
         event_mouse_click = my_event_manager.check_left_mouse_button();

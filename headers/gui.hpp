@@ -1,6 +1,8 @@
 #pragma once
 
+#include "matrix_to_pixel.hpp"
 #include "utils.hpp"
+
 #include <fmt/core.h>
 
 #include <SFML/Graphics.hpp>
@@ -49,37 +51,31 @@ public:
 
     auto check_event() -> sf::Event
     {
-        sf::Event event {};
+        sf::Event event;
+        while (window.pollEvent(event)) { // while there are events in the queue
+            // Handle the event
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
 
-        if (!window.isOpen() || !window.pollEvent(event)) {
-            // Return an empty event if the window is closed or
-            // there are no more events
-            return sf::Event();
-        }
-
-        // not part of event manager since it deals with
-        // the window, not the fluids.
-        if (event.type == sf::Event::Closed) {
-            window.close();
-        }
-
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-            // Toggle to the next draw type
-            switch (current_draw_type) {
-            case draw_type::GREY:
-                current_draw_type = draw_type::HSV;
-                break;
-            case draw_type::HSV:
-                current_draw_type = draw_type::VEL;
-                break;
-            case draw_type::VEL:
-                current_draw_type = draw_type::GREY;
-                break;
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+                // Toggle to the next draw type
+                switch (current_draw_type) {
+                case draw_type::GREY:
+                    current_draw_type = draw_type::HSV;
+                    break;
+                case draw_type::HSV:
+                    current_draw_type = draw_type::VEL;
+                    break;
+                case draw_type::VEL:
+                    current_draw_type = draw_type::GREY;
+                    break;
+                }
             }
         }
-
         return event;
     }
+
     auto update_display(std::array<float, BUFFER_SIZE>& x_data, std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data) -> void
     {
         window.clear();
@@ -108,14 +104,6 @@ public:
         return static_cast<sf::Uint8>(std::clamp(value, 0.0f, 1.0f) * 255);
     }
 
-    /**
-     * @brief This function takes in a density-matrix with values from 0-1 and
-     * converts each value in the matrix to a value from 0-255 then prints it
-     * on a single pixel in an SFML window.
-     *
-     * @param window
-     * @param densityArray
-     */
     auto GreyScaleMatrixToSFML(std::array<float, BUFFER_SIZE>& data) -> void
     {
         for (size_t i = 1uL; i <= AXIS_SIZE; i++) {
@@ -209,6 +197,7 @@ public:
                 auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
                 auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
+
                 [[maybe_unused]] auto u = u_data.at(IX(i, j));
                 [[maybe_unused]] auto v = v_data.at(IX(i, j));
 
@@ -232,10 +221,12 @@ public:
 
                 arrow.setFillColor(sf::Color::White);
 
+
                 arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
                 arrow.setOrigin(CELL_SIZE * 2, 0); // Set the origin to the base of the arrow
 
                 arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI)) + 90); // Rotate the arrow according to the direction of velocity
+
                 window.draw(arrow);
             }
         }
