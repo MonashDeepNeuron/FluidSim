@@ -144,7 +144,6 @@ private:
         }
     }
 
-
     void _M_set_bnd(float b, array_t<float>& arr)
     {
         for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
@@ -156,7 +155,6 @@ private:
         for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
             arr[IX(0, j)] = b;
             arr[IX(AXIS_SIZE + 1, j)] = -b;
-
         }
 
         // Set the corners to 0
@@ -222,11 +220,11 @@ private:
 
             for (auto j = 0uL; j <= AXIS_SIZE + 1; j++) {
                 if (i == 0 || j == 0 || i == AXIS_SIZE + 1 || j == AXIS_SIZE + 1) {
-                    fmt::print("m_v[IX({}, {})]: {}; ", i, j, m_v[IX(i, j)]);
-                    fmt::print("m_u[IX({}, {})]: {}", i, j, m_u[IX(i, j)]);
+                    // fmt::print("m_v[IX({}, {})]: {}; ", i, j, m_v[IX(i, j)]);
+                    // fmt::print("m_u[IX({}, {})]: {}", i, j, m_u[IX(i, j)]);
                 }
             }
-            fmt::println("");
+            // fmt::println("");
         }
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
