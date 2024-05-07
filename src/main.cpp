@@ -34,7 +34,13 @@ auto main() -> int
     // auto printing = sfml_printing();
 
     // Main loop
-    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f);
+    std::array<float, BUFFER_SIZE> u_arr;
+    std::array<float, BUFFER_SIZE> v_arr;
+
+    u_arr.fill(0.1f);
+    v_arr.fill(0.1f);
+    
+    auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f, u_arr, v_arr);
 
     auto event_mouse_click = 0uL;
 
@@ -48,15 +54,19 @@ auto main() -> int
         // event_mouse_click = my_event_manager.handle_event(event);
         event_mouse_click = my_event_manager.check_left_mouse_button();
         if (event_mouse_click != 0) {
-            ds.add_density(3, event_mouse_click);
+            ds.add_density(10, event_mouse_click);
         }
         bench_update.start();
-        fluid_gui.update_display(ds.x());
+        fluid_gui.update_display(ds.x(), ds.u(), ds.v());
         bench_update.stop();
 
         std::this_thread::sleep_for(ms(5));
         
         ds.dens_step();
+        ds.velocity_step();
+
+        my_event_manager.mouse_vel();
+
         bench_main.stop();
     }
     bench_update.finish();
