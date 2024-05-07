@@ -39,6 +39,7 @@ target
 build
 bld_vc
 out
+output
 
 # Configs and IDEs
 .cache
