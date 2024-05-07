@@ -45,7 +45,7 @@ auto main() -> int
     while (fluid_gui.is_open()) {
 
         // Check for events and handle them
-        [[maybe_unused]] auto event = fluid_gui.check_event();
+        fluid_gui.check_event();
 
         // event_mouse_click = my_event_manager.handle_event(event);
         event_mouse_click = my_event_manager.check_left_mouse_button();

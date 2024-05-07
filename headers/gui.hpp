@@ -1,6 +1,8 @@
 #pragma once
 
 #include "utils.hpp"
+#include "matrix_to_pixel.hpp"
+
 #include <fmt/core.h>
 
 #include <SFML/Graphics.hpp>
@@ -49,32 +51,51 @@ public:
 
     auto check_event() -> sf::Event
     {
-        sf::Event event {};
+        sf::Event event;
+        while (window.pollEvent(event)) { // while there are events in the queue
+            // Handle the event
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
 
-        if (!window.isOpen() || !window.pollEvent(event)) {
-            // Return an empty event if the window is closed or
-            // there are no more events
-            return sf::Event();
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+                // Toggle to the next draw type
+                switch (current_draw_type) {
+                case draw_type::GREY:
+                    current_draw_type = draw_type::HSV;
+                    break;
+                case draw_type::HSV:
+                    current_draw_type = draw_type::VEL;
+                    break;
+                case draw_type::VEL:
+                    current_draw_type = draw_type::GREY;
+                    break;
+                }
+            }
         }
+        return event;
+    }
+    auto update_display(std::array<float, BUFFER_SIZE>& data) -> void
+    {
+        window.clear();
 
-        // not part of event manager since it deals with
-        // the window, not the fluids.
-        if (event.type == sf::Event::Closed) {
-            window.close();
-        }
+        sf::RectangleShape (*draw_func)(std::array<float, BUFFER_SIZE>&, size_t, size_t);
 
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-            // Toggle to the next draw type
-            switch (current_draw_type) {
+        // identify draw function
+        switch (current_draw_type) {
             case draw_type::GREY:
-                current_draw_type = draw_type::HSV;
+                draw_func = matrix_coords_to_greyscale_pixel;
                 break;
             case draw_type::HSV:
-                current_draw_type = draw_type::VEL;
+                draw_func = matrix_coords_to_HSV_pixel;
                 break;
             case draw_type::VEL:
-                current_draw_type = draw_type::GREY;
+                draw_func = matrix_coords_to_HSV_pixel;
                 break;
+            default:
+                draw_func = matrix_coords_to_greyscale_pixel;
+                break;
+
             }
         }
 
@@ -132,9 +153,13 @@ public:
                 pixel.setFillColor(sf::Color(value, value, value));
 
                 window.draw(pixel);
-            }
         }
-    }
+        
+        // loop the matrix and apply the function to each pixel.
+        for (size_t i = 0uL; i < AXIS_SIZE + 2uL; i++) {
+            for (size_t j = 0uL; j < AXIS_SIZE + 2uL; j++) {
+                window.draw(draw_func(data, i, j));
+
 
     auto HSV_to_SFML(std::array<float, BUFFER_SIZE>& data) -> void
     {
@@ -156,44 +181,10 @@ public:
             }
         }
     }
+    
+    auto is_open() -> bool { return window.isOpen(); }
 
-    auto HSV_to_RGB(float H, float S, float V) -> sf::Color
-    {
-        float C = S * V;
-        float X = C * (1.0f - std::abs(fmodf(H / 60.0f, 2.0f) - 1.0f));
-        float m = V - C;
-        float Rs, Gs, Bs;
-
-        // Ensure H is within the range of 0 to 360
-        H = fmodf(H, 360.0f);
-        if (H < 0.0f)
-            H += 360.0f;
-
-        if (H >= 0.0f && H < 60.0f) {
-            Rs = C;
-            Gs = X;
-            Bs = 0.0f;
-        } else if (H >= 60.0f && H < 120.0f) {
-            Rs = X;
-            Gs = C;
-            Bs = 0.0f;
-        } else if (H >= 120.0f && H < 180.0f) {
-            Rs = 0.0f;
-            Gs = C;
-            Bs = X;
-        } else if (H >= 180.0f && H < 240.0f) {
-            Rs = 0.0f;
-            Gs = X;
-            Bs = C;
-        } else if (H >= 240.0f && H < 300.0f) {
-            Rs = X;
-            Gs = 0.0f;
-            Bs = C;
-        } else {
-            Rs = C;
-            Gs = 0.0f;
-            Bs = X;
-        }
+    auto getRenderWindow() -> sf::RenderWindow& { return window; }
 
         return sf::Color(static_cast<sf::Uint8>((Rs + m) * 255.0f), static_cast<sf::Uint8>((Gs + m) * 255.0f), static_cast<sf::Uint8>((Bs + m) * 255.0f));
     }
