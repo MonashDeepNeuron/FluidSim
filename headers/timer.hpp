@@ -15,9 +15,9 @@ private:
     int high;
     std::ofstream file;
     std::pair<int, int> ave;
-    high_resolution_clock::time_point start_time; // Added this line
+    high_resolution_clock::time_point start_time;
 public:
-    timer(auto name){
+    timer(auto name){ // Name must be safe for file name (eg no spaces).
         // Create folder for output - helps with gitignore.
         std::string folder = "./output";
         if (!std::filesystem::exists(folder)) {

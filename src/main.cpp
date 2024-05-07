@@ -42,29 +42,28 @@ auto main() -> int
 
     auto event_mouse_click = 0uL;
 
-    timer t("output");
-    timer dens_step("density");
+    timer bench_main("main");
+    timer bench_update("update_display");
     while (fluid_gui.is_open()) {
-        t.start();
+        bench_main.start();
         // Check for events and handle them
         fluid_gui.check_event();
 
         // event_mouse_click = my_event_manager.handle_event(event);
         event_mouse_click = my_event_manager.check_left_mouse_button();
-
         if (event_mouse_click != 0) {
             ds.add_density(3, event_mouse_click);
         }
-
+        bench_update.start();
         fluid_gui.update_display(ds.x());
+        bench_update.stop();
 
         std::this_thread::sleep_for(ms(5));
-        dens_step.start();
+        
         ds.dens_step();
-        dens_step.stop();
-        t.stop();
+        bench_main.stop();
     }
-    dens_step.finish();
-    t.finish();
+    bench_update.finish();
+    bench_main.finish();
     return 0;
 } 
