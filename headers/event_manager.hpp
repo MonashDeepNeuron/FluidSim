@@ -32,7 +32,7 @@ public:
         // fmt::println("Mouse button pressed event received");
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            fmt::println("Mouse left pressed");
+            // fmt::println("Mouse left pressed");
 
             auto x = event.mouseButton.x / S_CELL_SIZE;
             auto y = event.mouseButton.y / S_CELL_SIZE;
@@ -43,7 +43,7 @@ public:
                 return 0;
             }
 
-            fmt::println("Left mouse button was pressed at ({}, {})", x, y);
+            // fmt::println("Left mouse button was pressed at ({}, {})", x, y);
 
             return IX(static_cast<size_t>(y), static_cast<size_t>(x));
         }
@@ -118,7 +118,7 @@ public:
             auto y_dist = normalize(curr_y - prev_y);
 
             prevPos = mousePos;
-            // std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
+            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
             return { x_dist, y_dist };
         }
 

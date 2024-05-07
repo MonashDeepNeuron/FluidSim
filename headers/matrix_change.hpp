@@ -222,8 +222,8 @@ private:
 
             for (auto j = 0uL; j <= AXIS_SIZE + 1; j++) {
                 if (i == 0 || j == 0 || i == AXIS_SIZE + 1 || j == AXIS_SIZE + 1) {
-                    fmt::print("m_v[IX({}, {})]: {}; ", i, j, m_v[IX(i, j)]);
-                    fmt::print("m_u[IX({}, {})]: {}", i, j, m_u[IX(i, j)]);
+                    // fmt::print("m_v[IX({}, {})]: {}; ", i, j, m_v[IX(i, j)]);
+                    // fmt::print("m_u[IX({}, {})]: {}", i, j, m_u[IX(i, j)]);
                 }
             }
             fmt::println("");
