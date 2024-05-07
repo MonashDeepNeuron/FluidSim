@@ -117,7 +117,7 @@ public:
             auto y_dist = normalize(curr_y - prev_y);
 
             prevPos = mousePos;
-            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
+            // std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
             return { x_dist, y_dist };
         }
 
