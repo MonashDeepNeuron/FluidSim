@@ -70,7 +70,7 @@ public:
 
             auto x = mousePos.x / S_CELL_SIZE;
             auto y = mousePos.y / S_CELL_SIZE;
-            
+
             if (x < 0 || y < 0 || y > S_AXIS_SIZE || x > S_AXIS_SIZE) [[unlikely]] { // Don't do anything for boundary conditions
                 // fmt::println("Left mouse button was pressed at ({}, {})", x, y);
                 // fmt::println("yes");
