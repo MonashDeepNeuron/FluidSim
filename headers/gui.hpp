@@ -197,16 +197,12 @@ public:
                 auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
                 auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
+
                 [[maybe_unused]] auto u = u_data.at(IX(i, j));
                 [[maybe_unused]] auto v = v_data.at(IX(i, j));
 
-                // fmt::println("{}:{} ", u, v);
-
-                [[maybe_unused]] auto r = std::sqrt(u * u + v * v);
-                auto theta = std::atan2(v, u); // direction of velocity, in radians
-                theta = -theta; // Adjust for SFML's clockwise rotations
-                if (theta < 0)
-                    theta += 2 * static_cast<float>(M_PI); // Normalize to the range [0, 2π)
+                [[maybe_unused]] auto r = std::sqrt((u * u) + (v * v));
+                auto theta = std::atan2(u, v); // direction of velocity, in radians
 
                 sf::ConvexShape arrow;
                 arrow.setPointCount(4); // 3 points for the arrow shape (isosceles triangle)
@@ -225,17 +221,12 @@ public:
 
                 arrow.setFillColor(sf::Color::White);
 
-                // float random_angle = distribution(generator); // Generate a random angle
-                // arrow.setRotation(random_angle); // Rotate the arrow
-
-                // arrow.setPosition(xpos + static_cast<float>(1.5) * CELL_SIZE, ypos + static_cast<float>(1.5) * CELL_SIZE);
-                // arrow.setOrigin(CELL_SIZE / 2, CELL_SIZE / 2);
 
                 arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
                 arrow.setOrigin(CELL_SIZE * 2, 0); // Set the origin to the base of the arrow
 
-                arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI))); // Rotate the arrow according to the direction of velocity
-                // arrow.setRotation(135);
+                arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI)) + 90); // Rotate the arrow according to the direction of velocity
+
                 window.draw(arrow);
             }
         }

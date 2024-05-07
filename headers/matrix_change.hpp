@@ -119,7 +119,7 @@ public:
 
     auto test_display() -> void
     {
-        fmt::println("Size {}", static_cast<int>(m_x.size()));
+        // fmt::println("Size {}", static_cast<int>(m_x.size()));
 
         for (size_t i = 0; i < AXIS_SIZE + 2; ++i) {
             for (size_t j = 0; j < AXIS_SIZE + 2; ++j) {
@@ -129,7 +129,7 @@ public:
             fmt::print("\n");
         }
 
-        fmt::print("\n\n");
+        // fmt::print("\n\n");
     }
 
 private:
@@ -144,6 +144,7 @@ private:
         }
     }
 
+
     void _M_set_bnd(float b, array_t<float>& arr)
     {
         for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
@@ -155,6 +156,7 @@ private:
         for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
             arr[IX(0, j)] = b;
             arr[IX(AXIS_SIZE + 1, j)] = -b;
+
         }
 
         // Set the corners to 0
@@ -248,6 +250,7 @@ private:
 
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
             }
+            // fmt::println("");
         }
 
         _M_set_bnd(0, m_x);
