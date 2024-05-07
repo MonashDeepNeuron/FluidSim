@@ -5,12 +5,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <array>
-#include <chrono>
 #include <cstddef>
 #include <thread>
-
-#include <fstream>
-
 
 // Aliases
 using std::size_t;
