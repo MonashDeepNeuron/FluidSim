@@ -146,20 +146,6 @@ private:
 
     void _M_set_bnd(float b, array_t<float>& arr)
     {
-        // for (size_t i = 1; i <= AXIS_SIZE; i++) {
-        //     arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
-        //     arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
-        //     arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
-        //     arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
-        // }
-        // arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
-        // arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
-        // arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
-        // arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
-
-        // Set the first and last row to 0
-        // b = 0;
-
         for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
             arr[IX(i, 0)] = b;
             arr[IX(i, AXIS_SIZE + 1)] = -b;
@@ -190,7 +176,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0.0f, m_x);
+            _M_set_bnd(0, m_x);
         }
     }
 
@@ -206,7 +192,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0.1f, m_u);
+            _M_set_bnd(0, m_u);
         }
     }
 
@@ -222,7 +208,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0.1f, m_v);
+            _M_set_bnd(0, m_v);
         }
     }
 
@@ -264,7 +250,7 @@ private:
             }
         }
 
-        _M_set_bnd(0.0f, m_x);
+        _M_set_bnd(0, m_x);
     }
 
     auto _M_u_advect() -> void
@@ -294,7 +280,7 @@ private:
             }
         }
 
-        _M_set_bnd(0.1f, m_u);
+        _M_set_bnd(0, m_u);
     }
 
     auto _M_v_advect() -> void
@@ -327,7 +313,7 @@ private:
             // fmt::println("");
         }
 
-        _M_set_bnd(0.1f, m_v);
+        _M_set_bnd(0, m_v);
     }
 
     auto _M_project() -> void
@@ -340,8 +326,8 @@ private:
             }
         }
 
-        _M_set_bnd(0.0f, m_div);
-        _M_set_bnd(0.0f, m_p);
+        _M_set_bnd(0, m_div);
+        _M_set_bnd(0, m_p);
 
         for (auto k = 0; k < 20; k++) {
             for (auto i = 1uL; i <= AXIS_SIZE; i++) {
@@ -351,14 +337,16 @@ private:
             }
             _M_set_bnd(0, m_p);
         }
+
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                 m_u[IX(i, j)] -= static_cast<float>(0.5f * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h);
                 m_v[IX(i, j)] -= static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
             }
         }
-        _M_set_bnd(0.1f, m_u);
-        _M_set_bnd(0.1f, m_v);
+
+        _M_set_bnd(0, m_u);
+        _M_set_bnd(0, m_v);
     }
 
 private:
