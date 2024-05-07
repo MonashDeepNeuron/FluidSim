@@ -9,9 +9,15 @@
 #include <cstddef>
 #include <thread>
 
+#include <chrono>
+#include <fstream>
+
+
 // Aliases
 using std::size_t;
 using ms = std::chrono::milliseconds;
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
 
 auto main() -> int
 {
@@ -38,7 +44,10 @@ auto main() -> int
 
     auto event_mouse_click = 0uL;
 
+    std::ofstream file("output.txt", std::ios_base::app);
+
     while (fluid_gui.is_open()) {
+        auto start = high_resolution_clock::now();
 
         // Check for events and handle them
         [[maybe_unused]] auto event = fluid_gui.check_event();
@@ -55,7 +64,11 @@ auto main() -> int
         std::this_thread::sleep_for(ms(5));
 
         ds.dens_step();
+        
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<ms>(stop - start);
+        file << "Time taken by function: " << duration.count() << " microseconds\n";
     }
-
+    file.close();
     return 0;
-}
+} 
