@@ -36,8 +36,8 @@ auto main() -> int
     // Main loop
     std::array<float, BUFFER_SIZE> u_arr;
     std::array<float, BUFFER_SIZE> v_arr;
-    u_arr.fill(0.0f);
-    v_arr.fill(0.0f);
+    u_arr.fill(0.01f);
+    v_arr.fill(-0.03f);
     auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f, u_arr, v_arr);
 
     auto event_mouse_click = 0uL;

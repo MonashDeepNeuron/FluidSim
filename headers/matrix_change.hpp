@@ -39,7 +39,7 @@ public:
         , m_diff { diff }
         , m_dt { dt }
         , m_visc { visc }
-        , m_u { u_arr}
+        , m_u { u_arr }
         , m_v { v_arr }
         , m_v0 { 0.0f }
         , m_u0 { 0.0f }
@@ -47,7 +47,6 @@ public:
         , m_div { 0.0f }
         , m_p { 0.0f }
         , m_x { 0.0f }
-        
 
     {
     }
@@ -103,17 +102,15 @@ public:
 
     auto velocity_step() -> void
     {
-        swap(m_u0,m_u);
-        swap(m_v0,m_v);
+        swap(m_u0, m_u);
+        swap(m_v0, m_v);
 
         _M_u_diffuse();
-        _M_v_diffuse(); 
+        _M_v_diffuse();
         _M_project();
 
-        swap(m_u0,m_u);
-        swap(m_v0,m_v);
-
-
+        swap(m_u0, m_u);
+        swap(m_v0, m_v);
     }
 
     auto test_display() -> void
@@ -143,45 +140,44 @@ private:
         }
     }
 
-    void _M_set_bnd( [[maybe_unused]] int b, array_t<float> &arr) {
-    // for (size_t i = 1; i <= AXIS_SIZE; i++) {
-    //     arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
-    //     arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
-    //     arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
-    //     arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
-    // }
-    // arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
-    // arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
-    // arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
-    // arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
-        
-    // Set the first and last row to 0
+    void _M_set_bnd([[maybe_unused]] int b, array_t<float>& arr)
+    {
+        // for (size_t i = 1; i <= AXIS_SIZE; i++) {
+        //     arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
+        //     arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
+        //     arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
+        //     arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
+        // }
+        // arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
+        // arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
+        // arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
+        // arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
 
-    for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
-        arr[IX(i, 0)] = 0;
-        arr[IX(i, AXIS_SIZE + 1)] = 0;
+        // Set the first and last row to 0
+
+        for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
+            arr[IX(i, 0)] = 0;
+            arr[IX(i, AXIS_SIZE + 1)] = 0;
+        }
+
+        b = 0;
+
+        // Set the first and last column to 0
+        for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
+            arr[IX(0, j)] = 0;
+            arr[IX(AXIS_SIZE + 1, j)] = 0;
+        }
+
+        // Set the corners to 0
+        arr[IX(0, 0)] = 0;
+        arr[IX(0, AXIS_SIZE + 1)] = 0;
+        arr[IX(AXIS_SIZE + 1, 0)] = 0;
+        arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0;
     }
-    
-    b = 0;
-
-    // Set the first and last column to 0
-    for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
-        arr[IX(0, j)] = 0;
-        arr[IX(AXIS_SIZE + 1, j)] = 0;
-        
-    }
-
-    // Set the corners to 0
-    arr[IX(0, 0)] = 0;
-    arr[IX(0, AXIS_SIZE + 1)] = 0;
-    arr[IX(AXIS_SIZE + 1, 0)] = 0;
-    arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0;
-        
-}
 
     auto _M_diffuse() -> void
     {
-    float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
+        float a = m_dt * m_diff * AXIS_SIZE * AXIS_SIZE;
 
         for (auto k = 0uL; k < 20uL; k++) {
             for (auto i = 1uL; i <= AXIS_SIZE; i++) {
@@ -209,7 +205,7 @@ private:
 
             _M_set_bnd(1, m_u);
         }
-    } 
+    }
 
     auto _M_v_diffuse() -> void
     {
@@ -241,7 +237,7 @@ private:
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
                 b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
-                
+
                 auto i0 = static_cast<size_t>(a);
                 auto i1 = i0 + 1;
                 auto j0 = static_cast<size_t>(b);
@@ -251,13 +247,10 @@ private:
                 auto s0 = 1 - s1;
                 auto t1 = b - static_cast<float>(j0);
                 auto t0 = 1 - t1;
-                
-
 
                 m_x[IX(i, j)] = s0 * (t0 * m_x0[IX(i0, j0)] + t1 * m_x0[IX(i0, j1)]) + s1 * (t0 * m_x0[IX(i1, j0)] + t1 * m_x0[IX(i1, j1)]);
-                
             }
-                // fmt::println("");
+            // fmt::println("");
         }
 
         _M_set_bnd(0, m_x);
@@ -275,7 +268,7 @@ private:
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
                 b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
-                
+
                 auto i0 = static_cast<size_t>(a);
                 auto i1 = i0 + 1;
                 auto j0 = static_cast<size_t>(b);
@@ -285,11 +278,8 @@ private:
                 auto s0 = 1 - s1;
                 auto t1 = b - static_cast<float>(j0);
                 auto t0 = 1 - t1;
-                
-
 
                 m_u[IX(i, j)] = s0 * (t0 * m_u0[IX(i0, j0)] + t1 * m_u0[IX(i0, j1)]) + s1 * (t0 * m_u0[IX(i1, j0)] + t1 * m_u0[IX(i1, j1)]);
-                
             }
         }
 
@@ -304,13 +294,13 @@ private:
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
                 auto a = static_cast<float>(i) - dt0 * m_u[IX(i, j)];
                 auto b = static_cast<float>(j) - dt0 * m_v[IX(i, j)];
-                
+
                 // fmt::print("m_v[IX({}, {})] {}",i, j, m_v[IX(i, j)]);
 
                 // Clamp values to ensure they stay within bounds
                 a = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, a));
                 b = std::max(0.5f, std::min(static_cast<float>(AXIS_SIZE) + 0.5f, b));
-                
+
                 auto i0 = static_cast<size_t>(a);
                 auto i1 = i0 + 1;
                 auto j0 = static_cast<size_t>(b);
@@ -320,22 +310,17 @@ private:
                 auto s0 = 1 - s1;
                 auto t1 = b - static_cast<float>(j0);
                 auto t0 = 1 - t1;
-                
-
 
                 m_v[IX(i, j)] = s0 * (t0 * m_v0[IX(i0, j0)] + t1 * m_v0[IX(i0, j1)]) + s1 * (t0 * m_v0[IX(i1, j0)] + t1 * m_v0[IX(i1, j1)]);
-                
             }
-                // fmt::println("");
+            // fmt::println("");
         }
 
         _M_set_bnd(2, m_v);
     }
 
-
-
-
-    auto _M_project() -> void {
+    auto _M_project() -> void
+    {
         auto const h = 1.0f / AXIS_SIZE;
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
@@ -343,38 +328,35 @@ private:
                 m_p[IX(i, j)] = 0;
             }
         }
-        
+
         _M_set_bnd(0, m_div);
         _M_set_bnd(0, m_p);
-        
+
         for (auto k = 0; k < 20; k++) {
-            for (auto i = 1uL ;i <= AXIS_SIZE; i++) {
+            for (auto i = 1uL; i <= AXIS_SIZE; i++) {
                 for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                    m_p[IX(i, j)] =  static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
+                    m_p[IX(i, j)] = static_cast<float>((m_div[IX(i, j)] + m_p[IX(i - 1, j)] + m_p[IX(i + 1, j)] + m_p[IX(i, j - 1)] + m_p[IX(i, j + 1)]) / 4);
                 }
             }
             _M_set_bnd(0, m_p);
         }
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
             for (auto j = 1uL; j <= AXIS_SIZE; j++) {
-                m_u[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h);
-                m_v[IX(i, j)] -=  static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
+                m_u[IX(i, j)] -= static_cast<float>(0.5f * (m_p[IX(i + 1, j)] - m_p[IX(i - 1, j)]) / h);
+                m_v[IX(i, j)] -= static_cast<float>(0.5f * (m_p[IX(i, j + 1)] - m_p[IX(i, j - 1)]) / h);
             }
         }
         _M_set_bnd(1, m_u);
         _M_set_bnd(2, m_v);
-
-}
+    }
 
     auto add_velocity(float u, float v, size_t index) -> size_t
-    {   
+    {
         m_u[index] += u;
         m_v[index] += v;
 
         return 0;
     }
-
-    
 
 private:
     int m_diffuse_changer;
@@ -390,7 +372,6 @@ private:
     array_t<float> m_x0;
     array_t<float> m_div;
     array_t<float> m_p;
-
 
     // Final array to display
     array_t<float> m_x;

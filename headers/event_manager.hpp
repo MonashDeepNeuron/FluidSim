@@ -17,7 +17,7 @@ using std::size_t;
 class EventManager {
 private:
     gui& window;
-    static sf::Vector2i prevPos;
+    int iter = 0;
 
 public:
     explicit EventManager(gui& windowRef)
@@ -71,7 +71,7 @@ public:
 
             auto x = mousePos.x / S_CELL_SIZE;
             auto y = mousePos.y / S_CELL_SIZE;
-            
+
             // if (x <= 0 || y <= 0 || y >= S_AXIS_SIZE || x >= S_AXIS_SIZE) [[unlikely]] { // Don't do anything for boundary conditions
             //     // fmt::println("Left mouse button was pressed at ({}, {})", x, y);
             //     // fmt::println("yes");
@@ -83,41 +83,44 @@ public:
         return 0;
     }
 
-    auto mouse_vel() -> int {
-      auto currPos = sf::Mouse::getPosition(window.getRenderWindow());      
+    auto sigmoid(float x) -> float
+    {
+        return 1.00f / (1.00f + expf(-x));
+    }
 
-      [[maybe_unused]] auto x_dirn = 1;
-      [[maybe_unused]] auto y_dirn = 1;
+    auto normalize(float x) -> float
+    {
+        return 0.1f * sigmoid(x) - 0.05f;
+    }
 
-      auto x = currPos.x / S_CELL_SIZE;
-      auto y = currPos.y / S_CELL_SIZE;
+    auto mouse_vel() -> std::pair<float, float>
+    {
+        static sf::Vector2i prevPos;
+        auto mousePos = sf::Mouse::getPosition(window.getRenderWindow());
 
-      if (0 <= x && x <= S_AXIS_SIZE && 0 <= y && y <= S_AXIS_SIZE) [[likely]] {
-         if (currPos != prevPos) { // Check if it's not the first call
+        if (iter == 0) {
+            prevPos = mousePos;
+            iter++;
+            return { 0.0f, 0.0f };
+        }
 
-            auto prevX = prevPos.x / S_CELL_SIZE;
-            auto prevY = prevPos.y / S_CELL_SIZE;   
+        iter++;
 
-            // fmt::println("Previous mouse position: ({}, {})", prevX, prevY);
+        auto curr_x = static_cast<float>(mousePos.x) / S_CELL_SIZE;
+        auto curr_y = static_cast<float>(mousePos.y) / S_CELL_SIZE;
 
-            if (x - prevX < 0) {
-              x_dirn = -1;
-            }
+        if (curr_x > 0 && curr_y > 0 && curr_y < S_AXIS_SIZE && curr_x < S_AXIS_SIZE) {
+            auto prev_x = static_cast<float>(prevPos.x) / S_CELL_SIZE;
+            auto prev_y = static_cast<float>(prevPos.y) / S_CELL_SIZE;
 
-            if (y - prevY > 0) {
-              y_dirn = -1;
-            }
+            auto x_dist = normalize(curr_x - prev_x);
+            auto y_dist = normalize(curr_y - prev_y);
 
-            auto x_dist = x_dirn * (x + prevX)^2;
-            auto y_dist = y_dirn * (y + prevY)^2;
+            prevPos = mousePos;
+            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
+            return { x_dist, y_dist };
+        }
 
-            fmt::println("Distance moved: {}, {}", x_dist, y_dist);   
-
-         }
-
-        prevPos = currPos;
-
-      }
-      return 0;
-  }
+        return { 0.0f, 0.0f };
+    }
 };
