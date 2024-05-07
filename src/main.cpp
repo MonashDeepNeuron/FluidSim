@@ -1,7 +1,7 @@
 #include "event_manager.hpp"
 #include "gui.hpp"
 #include "matrix_change.hpp"
-
+#include "timer.hpp"
 #include <SFML/Graphics.hpp>
 
 #include <array>
@@ -9,15 +9,13 @@
 #include <cstddef>
 #include <thread>
 
-#include <chrono>
 #include <fstream>
 
 
 // Aliases
 using std::size_t;
 using ms = std::chrono::milliseconds;
-using std::chrono::high_resolution_clock;
-using std::chrono::duration_cast;
+
 
 auto main() -> int
 {
@@ -44,11 +42,10 @@ auto main() -> int
 
     auto event_mouse_click = 0uL;
 
-    std::ofstream file("output.txt", std::ios_base::app);
-
+    timer t("output");
+    timer dens_step("density");
     while (fluid_gui.is_open()) {
-        auto start = high_resolution_clock::now();
-
+        t.start();
         // Check for events and handle them
         fluid_gui.check_event();
 
@@ -62,13 +59,12 @@ auto main() -> int
         fluid_gui.update_display(ds.x());
 
         std::this_thread::sleep_for(ms(5));
-
+        dens_step.start();
         ds.dens_step();
-        
-        auto stop = high_resolution_clock::now();
-        auto duration = duration_cast<ms>(stop - start);
-        file << "Time taken by function: " << duration.count() << " microseconds\n";
+        dens_step.stop();
+        t.stop();
     }
-    file.close();
+    dens_step.finish();
+    t.finish();
     return 0;
 } 
