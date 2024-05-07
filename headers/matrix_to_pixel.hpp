@@ -1,4 +1,6 @@
 #pragma once
+#include "const.hpp"
+#include "utils.hpp"
 #include <SFML/Graphics.hpp>
 #include <array>
 #include <cmath>
@@ -6,13 +8,12 @@
 auto matrix_coords_to_greyscale_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape;
 auto matrix_coords_to_HSV_pixel(std::array<float, BUFFER_SIZE>& data, size_t i, size_t j) -> sf::RectangleShape;
 
-namespace{ // Putting these methods in namespace makes them private.
-           // They are only used locally by the 2 functions (above) that we want to export.
+namespace { // Putting these methods in namespace makes them private.
+            // They are only used locally by the 2 functions (above) that we want to export.
 constexpr auto grey_scale(float value) -> sf::Uint8
 {
     return static_cast<sf::Uint8>(std::clamp(value, 0.0f, 1.0f) * 255);
 }
-
 
 auto HSV_to_RGB(float H, float S, float V) -> sf::Color
 {
@@ -56,7 +57,6 @@ auto HSV_to_RGB(float H, float S, float V) -> sf::Color
 }
 }
 
-
 /**
  * @brief This function takes in a density-matrix with values from 0-1 and
  * converts each value in the matrix to a value from 0-255 then prints it
@@ -76,7 +76,7 @@ auto matrix_coords_to_greyscale_pixel(std::array<float, BUFFER_SIZE>& data, size
     auto value = grey_scale(data.at(IX(i, j)));
 
     pixel.setFillColor(sf::Color(value, value, value));
-    
+
     return pixel;
 }
 
