@@ -44,35 +44,28 @@ public:
 
     auto check_event() -> sf::Event
     {
-        sf::Event event {};
+        sf::Event event;
+        while (window.pollEvent(event)) { // while there are events in the queue
+            // Handle the event
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
 
-        if (!window.isOpen() || !window.pollEvent(event)) {
-            // Return an empty event if the window is closed or
-            // there are no more events
-            return sf::Event();
-        }
-
-        // not part of event manager since it deals with
-        // the window, not the fluids.
-        if (event.type == sf::Event::Closed) {
-            window.close();
-        }
-
-        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-            // Toggle to the next draw type
-            switch (current_draw_type) {
-            case draw_type::GREY:
-                current_draw_type = draw_type::HSV;
-                break;
-            case draw_type::HSV:
-                current_draw_type = draw_type::VEL;
-                break;
-            case draw_type::VEL:
-                current_draw_type = draw_type::GREY;
-                break;
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+                // Toggle to the next draw type
+                switch (current_draw_type) {
+                case draw_type::GREY:
+                    current_draw_type = draw_type::HSV;
+                    break;
+                case draw_type::HSV:
+                    current_draw_type = draw_type::VEL;
+                    break;
+                case draw_type::VEL:
+                    current_draw_type = draw_type::GREY;
+                    break;
+                }
             }
         }
-
         return event;
     }
     auto update_display(std::array<float, BUFFER_SIZE>& data) -> void
