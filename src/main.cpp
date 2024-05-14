@@ -53,7 +53,7 @@ auto main() -> int
         event_mouse_click = my_event_manager.check_left_mouse_button();
 
         if (event_mouse_click != 0) {
-            ds.add_density(10, event_mouse_click);
+            ds.add_density(30, event_mouse_click);
         }
 
         auto event_mouse_drag = my_event_manager.mouse_vel();
@@ -68,8 +68,6 @@ auto main() -> int
 
         ds.dens_step();
         ds.velocity_step();
-
-        my_event_manager.mouse_vel();
     }
 
     return 0;

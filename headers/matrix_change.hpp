@@ -94,7 +94,7 @@ public:
     {
         m_u[index] = u;
         m_v[index] = v;
-        
+
         return 0;
     }
 
@@ -121,7 +121,8 @@ public:
 
         _M_v_advect();
         _M_u_advect();
-
+        // swap(m_u0, m_u);
+        // swap(m_v0, m_v);
         _M_project();
     }
 
@@ -152,7 +153,6 @@ private:
         }
     }
 
-
     void _M_set_bnd(float b, array_t<float>& arr)
     {
         for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
@@ -164,7 +164,6 @@ private:
         for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
             arr[IX(0, j)] = b;
             arr[IX(AXIS_SIZE + 1, j)] = -b;
-
         }
 
         // Set the corners to 0
