@@ -67,11 +67,10 @@ public:
     auto check_left_mouse_button() -> size_t
     {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            auto mousePos = sf::Mouse::getPosition(window.getRenderWindow());
+            auto mouse_pos = sf::Mouse::getPosition(window.getRenderWindow());
 
-            auto x = mousePos.x / S_CELL_SIZE;
-            auto y = mousePos.y / S_CELL_SIZE;
-
+            auto x = mouse_pos.x / S_CELL_SIZE;
+            auto y = mouse_pos.y / S_CELL_SIZE;
 
             if (x < 0 || y < 0 || y > S_AXIS_SIZE || x > S_AXIS_SIZE) [[unlikely]] { // Don't do anything for boundary conditions
                 // fmt::println("Left mouse button was pressed at ({}, {})", x, y);
@@ -91,37 +90,43 @@ public:
 
     auto normalize(float x) -> float
     {
-        return 0.1f * sigmoid(x) - 0.05f;
+        // return 0.1f * sigmoid(x) - 0.05f;
+        return 27.0f * sigmoid(x) - 10.0f;
     }
 
-    auto mouse_vel() -> std::pair<float, float>
+    auto mouse_vel() -> std::tuple<float, float, size_t>
     {
-        static sf::Vector2i prevPos;
-        auto mousePos = sf::Mouse::getPosition(window.getRenderWindow());
+        static sf::Vector2i prev_pos;
+        auto mouse_pos = sf::Mouse::getPosition(window.getRenderWindow());
 
         if (iter == 0) {
-            prevPos = mousePos;
+            prev_pos = mouse_pos;
             iter++;
-            return { 0.0f, 0.0f };
+            return { 0.0f, 0.0f, static_cast<size_t>(1.00f) };
         }
 
         iter++;
 
-        auto curr_x = static_cast<float>(mousePos.x) / S_CELL_SIZE;
-        auto curr_y = static_cast<float>(mousePos.y) / S_CELL_SIZE;
+        auto curr_x = static_cast<float>(mouse_pos.x) / S_CELL_SIZE;
+        auto curr_y = static_cast<float>(mouse_pos.y) / S_CELL_SIZE;
 
         if (curr_x > 0 && curr_y > 0 && curr_y < S_AXIS_SIZE && curr_x < S_AXIS_SIZE) {
-            auto prev_x = static_cast<float>(prevPos.x) / S_CELL_SIZE;
-            auto prev_y = static_cast<float>(prevPos.y) / S_CELL_SIZE;
+            auto prev_x = static_cast<float>(prev_pos.x) / S_CELL_SIZE;
+            auto prev_y = static_cast<float>(prev_pos.y) / S_CELL_SIZE;
 
             auto x_dist = normalize(curr_x - prev_x);
             auto y_dist = normalize(curr_y - prev_y);
 
-            prevPos = mousePos;
-            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << std::endl;
-            return { x_dist, y_dist };
+            prev_pos = mouse_pos;
+
+            auto x = mouse_pos.x / S_CELL_SIZE;
+            auto y = mouse_pos.y / S_CELL_SIZE;
+            size_t location_index = IX(sign_cast(y), sign_cast(x));
+            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << "index" << location_index << std::endl;
+
+            return { x_dist, y_dist, location_index };
         }
 
-        return { 0.0f, 0.0f };
+        return { 0.0f, 0.0f, static_cast<size_t>(1.00f) };
     }
 };

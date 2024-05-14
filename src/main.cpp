@@ -37,9 +37,9 @@ auto main() -> int
     std::array<float, BUFFER_SIZE> u_arr;
     std::array<float, BUFFER_SIZE> v_arr;
 
-    u_arr.fill(0.1f);
-    v_arr.fill(0.1f);
-    
+    u_arr.fill(0.0f);
+    v_arr.fill(0.0f);
+
     auto ds = DensitySolver<BUFFER_SIZE>(0.0001f, 0.1f, 0.0001f, u_arr, v_arr);
 
     auto event_mouse_click = 0uL;
@@ -54,6 +54,12 @@ auto main() -> int
 
         if (event_mouse_click != 0) {
             ds.add_density(10, event_mouse_click);
+        }
+
+        auto event_mouse_drag = my_event_manager.mouse_vel();
+        if (event_mouse_drag != std::make_tuple(0.0f, 0.0f, static_cast<size_t>(1.00f))) {
+            auto [x_dist, y_dist, location_index] = event_mouse_drag;
+            ds.add_velocity(x_dist, y_dist, location_index);
         }
 
         fluid_gui.update_display(ds.x(), ds.u(), ds.v());
