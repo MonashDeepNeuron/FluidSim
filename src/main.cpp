@@ -69,7 +69,6 @@ auto main() -> int
         ds.dens_step();
         ds.velocity_step();
 
-        my_event_manager.mouse_vel();
     }
 
     return 0;

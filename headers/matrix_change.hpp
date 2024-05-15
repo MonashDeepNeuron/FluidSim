@@ -131,10 +131,10 @@ public:
 
         for (size_t i = 0; i < AXIS_SIZE + 2; ++i) {
             for (size_t j = 0; j < AXIS_SIZE + 2; ++j) {
-                fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
+                // fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
             }
 
-            fmt::print("\n");
+            // fmt::print("\n");
         }
 
         // fmt::print("\n\n");
@@ -234,7 +234,7 @@ private:
                     // fmt::print("m_u[IX({}, {})]: {}", i, j, m_u[IX(i, j)]);
                 }
             }
-            fmt::println("");
+            // fmt::println("");
         }
 
         for (auto i = 1uL; i <= AXIS_SIZE; i++) {
