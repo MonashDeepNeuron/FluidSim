@@ -85,13 +85,17 @@ public:
 
     auto sigmoid(float x) -> float
     {
+        // Clamps a value from 0.00 - 1.00
         return 1.00f / (1.00f + expf(-x));
     }
 
     auto normalize(float x) -> float
     {
         // return 0.1f * sigmoid(x) - 0.05f;
-        return 27.0f * sigmoid(x) - 10.0f;
+
+        //
+        float range_buffer = 50.0f;
+        return range_buffer * sigmoid(x) - range_buffer/2;
     }
 
     auto mouse_vel() -> std::tuple<float, float, size_t>
