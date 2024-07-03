@@ -13,9 +13,17 @@ include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
 # ---- External libraries ----
-find_package(SFML COMPONENTS system window graphics CONFIGS REQUIRED)
+#set(fmt_DIR C:/Users/erolc/OneDrive/Documents/GitHub/fmt/support/cmake/fmt-config.cmake)
+set(fmt_DIR C:/Users/erolc/OneDrive/Documents/fmt/lib/cmake/fmt)
+set(SFML_DIR C:/Users/erolc/OneDrive/Documents/GitHub/SFML/lib/cmake/SFML)
 
+find_package(SFML COMPONENTS system window graphics CONFIGS REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+
+
+
+
+
 
 # ---- Declare internal library ----
 # add_library(libFluidSim OBJECT)
