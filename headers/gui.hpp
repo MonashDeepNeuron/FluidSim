@@ -224,7 +224,10 @@ public:
 
                 arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
                 arrow.setOrigin(CELL_SIZE * 2, 0); // Set the origin to the base of the arrow
-                float M_PI = 3.1415;
+#ifndef M_PI                
+                //TODO: Investigate why M_PI is defined in Linux but not on Windows
+                constexpr float M_PI = 3.1415;
+#endif
                 arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI)) + 90); // Rotate the arrow according to the direction of velocity
 
                 window.draw(arrow);
