@@ -15,6 +15,7 @@ using ms = std::chrono::milliseconds;
 
 auto main() -> int
 {
+    try {
 
     /*
     main tells gui about the fluids, and asks it for events
@@ -68,6 +69,11 @@ auto main() -> int
 
         ds.dens_step();
         ds.velocity_step();
+    }
+
+    } catch(std::exception& ex) {
+        std::cerr << ex.what() << std::endl;
+        return 1;
     }
 
     return 0;

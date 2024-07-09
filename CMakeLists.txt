@@ -36,7 +36,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   # Use your flatform specific settings here.
   # Concurrent compile support (maybe /FS also?)
   add_compile_options(/MP)  
-  set(SFML_ROOT C:/opt/CPP/SFML-2.6.1)
+  set(SFML_ROOT c:/Users/erolc/OneDrive/Documents/GitHub/SFML)
   # end of MSVC
  
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -54,6 +54,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
 # Please consult to https://www.sfml-dev.org/download.php
 
 set(SFML_DIR ${SMFL_ROOT}/SFML/lib/cmake/SFML)
+set(SFML_STATIC_LIBRARIES TRUE)
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 
 # fmt Project: https://github.com/fmtlib/fmt
