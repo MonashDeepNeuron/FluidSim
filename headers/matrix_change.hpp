@@ -146,7 +146,7 @@ private:
     {
         for (auto i = 0uL; i < BUFFER_SZ; ++i) {
             m_x[i] += m_dt * m_x0[i];
-
+            m_x[200] = m_dt * m_x0[200];
             if (m_x[i] > 1) {
                 m_x[i] = 1;
             }
@@ -155,22 +155,25 @@ private:
 
     void _M_set_bnd(float b, array_t<float>& arr)
     {
+        float a = b;
         for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
-            arr[IX(i, 0)] = b;
-            arr[IX(i, AXIS_SIZE + 1)] = -b;
+            
+            arr[IX(i, 0)] = arr[IX(i, 1)] +a; // Top row
+            arr[IX(i, AXIS_SIZE + 1)] = arr[IX(i, AXIS_SIZE)]; // Bottom row
         }
 
         // Set the first and last column to 0
         for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
-            arr[IX(0, j)] = b;
-            arr[IX(AXIS_SIZE + 1, j)] = -b;
+            arr[IX(0, j)] = arr[IX(1, j)]; // Left column
+            arr[IX(AXIS_SIZE + 1, j)] = arr[IX(AXIS_SIZE, j)]; // Right column
         }
 
-        // Set the corners to 0
-        arr[IX(0, 0)] = 0;
-        arr[IX(0, AXIS_SIZE + 1)] = 0;
-        arr[IX(AXIS_SIZE + 1, 0)] = 0;
-        arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0;
+        // Set the corners
+        arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
+        arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
+        arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
+        arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+
     }
 
     auto _M_diffuse() -> void
