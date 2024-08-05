@@ -2,10 +2,18 @@
     "version": 3,
     "cmakeMinimumRequired": {
         "major": 3,
-        "minor": 16,
+        "minor": 21,
         "patch": 0
     },
     "configurePresets": [
+        {
+            "name": "dev-mode",
+            "hidden": true,
+            "cacheVariables": {
+                "FluidSim_DEVELOPER_MODE": "ON",
+                "VCPKG_MANIFEST_FEATURES": "test"
+            }
+        },
         {
             "name": "vcpkg",
             "hidden": true,
@@ -146,7 +154,8 @@
             "name": "debug-linux",
             "binaryDir": "${sourceDir}/build/linux/debug",
             "inherits": [
-                "linux"
+                "linux",
+                "dev-mode"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -157,7 +166,8 @@
             "name": "debug-macos",
             "binaryDir": "${sourceDir}/build/macos/debug",
             "inherits": [
-                "darwin"
+                "darwin",
+                "dev-mode"
             ],
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
@@ -230,3 +240,4 @@
         }
     ]
 }
+

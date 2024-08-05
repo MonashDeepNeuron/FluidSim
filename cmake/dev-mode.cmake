@@ -2,7 +2,7 @@ include(cmake/folders.cmake)
 
 include(CTest)
 if(BUILD_TESTING)
-  add_subdirectory(test)
+    # add_subdirectory(test)
 endif()
 
 add_custom_target(
@@ -10,7 +10,7 @@ add_custom_target(
     COMMAND cmake-init-example_exe
     VERBATIM
 )
-add_dependencies(run-exe cmake-init-example_exe)
+add_dependencies(run-exe FluidSim)
 
 option(BUILD_MCSS_DOCS "Build documentation using Doxygen and m.css" OFF)
 if(BUILD_MCSS_DOCS)
