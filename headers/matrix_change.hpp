@@ -153,20 +153,14 @@ private:
         }
     }
 
-    void _M_set_bnd(float b, array_t<float>& arr)
+    void _M_set_bnd(int  b, array_t<float>& arr)
     {
-        float a = b;
-        for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
-            
-            arr[IX(i, 0)] = arr[IX(i, 1)] +a; // Top row
-            arr[IX(i, AXIS_SIZE + 1)] = arr[IX(i, AXIS_SIZE)]; // Bottom row
-        }
-
-        // Set the first and last column to 0
-        for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
-            arr[IX(0, j)] = arr[IX(1, j)]; // Left column
-            arr[IX(AXIS_SIZE + 1, j)] = arr[IX(AXIS_SIZE, j)]; // Right column
-        }
+ 
+        for ( unsigned long int i=1 ; i<=AXIS_SIZE ; i++ ) {
+            arr[IX(0 ,i)] = b==1 ? -arr[IX(1,i)] : arr[IX(1,i)];
+            arr[IX(AXIS_SIZE+1,i)] = b==1 ? -arr[IX(AXIS_SIZE,i)] : arr[IX(AXIS_SIZE,i)];
+            arr[IX(i,0 )] = b==2 ? -arr[IX(i,1)] : arr[IX(i,1)];
+            arr[IX(i,AXIS_SIZE+1)] = b==2 ? -arr[IX(i,AXIS_SIZE)] : arr[IX(i,AXIS_SIZE)];
 
         // Set the corners
         arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
@@ -174,6 +168,7 @@ private:
         arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
         arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
 
+    }
     }
 
     auto _M_diffuse() -> void
@@ -204,7 +199,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0, m_u);
+            _M_set_bnd(1, m_u);
         }
     }
 
@@ -220,7 +215,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0, m_v);
+            _M_set_bnd(2, m_v);
         }
     }
 
@@ -293,7 +288,7 @@ private:
             }
         }
 
-        _M_set_bnd(0, m_u);
+        _M_set_bnd(1, m_u);
     }
 
     auto _M_v_advect() -> void
@@ -326,7 +321,7 @@ private:
             // fmt::println("");
         }
 
-        _M_set_bnd(0, m_v);
+        _M_set_bnd(2, m_v);
     }
 
     auto _M_project() -> void
@@ -358,8 +353,8 @@ private:
             }
         }
 
-        _M_set_bnd(0, m_u);
-        _M_set_bnd(0, m_v);
+        _M_set_bnd(1, m_u);
+        _M_set_bnd(2, m_v);
     }
 
 private:
