@@ -126,7 +126,7 @@ public:
             auto x = mouse_pos.x / S_CELL_SIZE;
             auto y = mouse_pos.y / S_CELL_SIZE;
             size_t location_index = IX(sign_cast(y), sign_cast(x));
-            std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << "index" << location_index << std::endl;
+            // std::cout << "X Velocity: " << x_dist << ", Y Velocity: " << y_dist << "index" << location_index << std::endl;
 
             return { x_dist, y_dist, location_index };
         }
