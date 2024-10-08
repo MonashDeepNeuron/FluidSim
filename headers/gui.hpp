@@ -15,6 +15,12 @@
 
 #include <random>
 
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 using std::size_t;
 
 class gui {
@@ -186,49 +192,51 @@ public:
         return sf::Color(static_cast<sf::Uint8>((Rs + m) * 255.0f), static_cast<sf::Uint8>((Gs + m) * 255.0f), static_cast<sf::Uint8>((Bs + m) * 255.0f));
     }
 
-    auto VEL_to_SFML(std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data) -> void
-    {
-        // std::default_random_engine generator;
-        // std::uniform_real_distribution<float> distribution(0.0, 360.0);
+  auto VEL_to_SFML(std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data) -> void
+  {
+      for (size_t i = 1uL; i <= AXIS_SIZE; i += 7) {
+          for (size_t j = 1uL; j <= AXIS_SIZE; j += 7) {
 
-        for (size_t i = 1uL; i <= AXIS_SIZE; i += 7) {
-            for (size_t j = 1uL; j <= AXIS_SIZE; j += 7) {
+              auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
+              auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
 
-                auto xpos = static_cast<float>((j - 1) * CELL_SIZE);
-                auto ypos = static_cast<float>((i - 1) * CELL_SIZE);
+              [[maybe_unused]] auto u = u_data.at(IX(i, j));
+              [[maybe_unused]] auto v = v_data.at(IX(i, j));
 
+              [[maybe_unused]] auto r = std::sqrt((u * u) + (v * v));
+              auto theta = std::atan2(u, v); // direction of velocity, in radians
 
-                [[maybe_unused]] auto u = u_data.at(IX(i, j));
-                [[maybe_unused]] auto v = v_data.at(IX(i, j));
+              sf::ConvexShape arrow;
+              arrow.setPointCount(7); // New arrow has 7 points
 
-                [[maybe_unused]] auto r = std::sqrt((u * u) + (v * v));
-                auto theta = std::atan2(u, v); // direction of velocity, in radians
+              // Define points for the new arrow (adjust according to the desired shape)
+              sf::Vector2f point1(CELL_SIZE * 1, 0);          // Tip of the arrow
+              sf::Vector2f point2(0, CELL_SIZE * 1);        // Left-top corner of the body
+              sf::Vector2f point3(CELL_SIZE * 1.00, CELL_SIZE * 1);  // Mid-left of the body
+              sf::Vector2f point4(CELL_SIZE * 1.00, CELL_SIZE * 3);  // Bottom-left of the arrow
+              sf::Vector2f point5(CELL_SIZE * 1.50, CELL_SIZE * 3);    // Bottom-right of the arrow
+              sf::Vector2f point6(CELL_SIZE * 1.50, CELL_SIZE * 1);    // Mid-right of the body
+              sf::Vector2f point7(CELL_SIZE * 2.5, CELL_SIZE * 1); // Right-top corner of the body
 
-                sf::ConvexShape arrow;
-                arrow.setPointCount(4); // 3 points for the arrow shape (isosceles triangle)
+              // Set the points in the arrow shape
+              arrow.setPoint(0, point1);
+              arrow.setPoint(1, point2);
+              arrow.setPoint(2, point3);
+              arrow.setPoint(3, point4);
+              arrow.setPoint(4, point5);
+              arrow.setPoint(5, point6);
+              arrow.setPoint(6, point7);
 
-                // Calculate points for the arrow shape
-                sf::Vector2f topPoint(CELL_SIZE * 2, 0); // Top point of the triangle
-                sf::Vector2f leftPoint(0, CELL_SIZE * 2); // Left point of the triangle
-                sf::Vector2f centerPoint(CELL_SIZE * 2, 0); // Center point of
-                sf::Vector2f rightPoint(CELL_SIZE * 4, CELL_SIZE * 2); // Right point of the triangle
+              arrow.setFillColor(sf::Color::White);
 
-                // Set the points of the arrow
-                arrow.setPoint(0, topPoint);
-                arrow.setPoint(1, leftPoint);
-                arrow.setPoint(2, centerPoint);
-                arrow.setPoint(3, rightPoint);
+              // Set the position and rotation
+              arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
+              arrow.setOrigin(CELL_SIZE * 1, CELL_SIZE * 1.5); // Set origin to align with the arrow body
 
-                arrow.setFillColor(sf::Color::White);
+              arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI)) + 90); // Rotate the arrow
 
-
-                arrow.setPosition(xpos + CELL_SIZE * 2, ypos + CELL_SIZE * 2); // Adjust position for larger size
-                arrow.setOrigin(CELL_SIZE * 2, 0); // Set the origin to the base of the arrow
-
-                arrow.setRotation(static_cast<float>(theta * 180 / static_cast<float>(M_PI)) + 90); // Rotate the arrow according to the direction of velocity
-
-                window.draw(arrow);
-            }
-        }
-    }
+              window.draw(arrow);
+          }
+      }
+  }
 };

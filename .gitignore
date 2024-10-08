@@ -50,3 +50,6 @@ output
 # CMake Items
 CMakeUserPresets.json
 Testing
+
+# vcpkg Dependencies just specifiy yours within the vcpkg.json file
+vcpkg.json

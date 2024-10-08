@@ -90,6 +90,14 @@ public:
         return 0;
     }
 
+    auto add_velocity(float u, float v, size_t index) -> size_t
+    {
+        m_u[index] = u;
+        m_v[index] = v;
+
+        return 0;
+    }
+
     auto dens_step() -> void
     {
         // _M_add_source();
@@ -113,7 +121,8 @@ public:
 
         _M_v_advect();
         _M_u_advect();
-
+        // swap(m_u0, m_u);
+        // swap(m_v0, m_v);
         _M_project();
     }
 
@@ -123,10 +132,10 @@ public:
 
         for (size_t i = 0; i < AXIS_SIZE + 2; ++i) {
             for (size_t j = 0; j < AXIS_SIZE + 2; ++j) {
-                fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
+                // fmt::println("{}:{} ", m_x[IX(i, j)], IX(i, j));
             }
 
-            fmt::print("\n");
+            // fmt::print("\n");
         }
 
         // fmt::print("\n\n");
@@ -137,32 +146,30 @@ private:
     {
         for (auto i = 0uL; i < BUFFER_SZ; ++i) {
             m_x[i] += m_dt * m_x0[i];
-
+            m_x[200] = m_dt * m_x0[200];
             if (m_x[i] > 1) {
                 m_x[i] = 1;
             }
         }
     }
 
-    void _M_set_bnd(float b, array_t<float>& arr)
+    void _M_set_bnd(int b, array_t<float>& arr)
     {
-        for (size_t i = 0; i <= AXIS_SIZE + 1; i++) {
-            arr[IX(i, 0)] = b;
-            arr[IX(i, AXIS_SIZE + 1)] = -b;
-        }
 
-        // Set the first and last column to 0
-        for (size_t j = 0; j <= AXIS_SIZE + 1; j++) {
-            arr[IX(0, j)] = b;
-            arr[IX(AXIS_SIZE + 1, j)] = -b;
-        }
+        for (unsigned long int i = 1; i <= AXIS_SIZE; i++) {
+            arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
+            arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
+            arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
+            arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
 
-        // Set the corners to 0
-        arr[IX(0, 0)] = 0;
-        arr[IX(0, AXIS_SIZE + 1)] = 0;
-        arr[IX(AXIS_SIZE + 1, 0)] = 0;
-        arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0;
+            // Set the corners
+            arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
+            arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
+            arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
+            arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+        }
     }
+    
 
     auto _M_diffuse() -> void
     {
@@ -192,7 +199,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0, m_u);
+            _M_set_bnd(1, m_u);
         }
     }
 
@@ -208,7 +215,7 @@ private:
                 }
             }
 
-            _M_set_bnd(0, m_v);
+            _M_set_bnd(2, m_v);
         }
     }
 
@@ -281,7 +288,7 @@ private:
             }
         }
 
-        _M_set_bnd(0, m_u);
+        _M_set_bnd(1, m_u);
     }
 
     auto _M_v_advect() -> void
@@ -314,7 +321,7 @@ private:
             // fmt::println("");
         }
 
-        _M_set_bnd(0, m_v);
+        _M_set_bnd(2, m_v);
     }
 
     auto _M_project() -> void
@@ -346,8 +353,8 @@ private:
             }
         }
 
-        _M_set_bnd(0, m_u);
-        _M_set_bnd(0, m_v);
+        _M_set_bnd(1, m_u);
+        _M_set_bnd(2, m_v);
     }
 
 private:
