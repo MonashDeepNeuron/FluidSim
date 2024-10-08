@@ -195,7 +195,7 @@ public:
     auto VEL_to_SFML(std::array<float, BUFFER_SIZE>& u_data, std::array<float, BUFFER_SIZE>& v_data) -> void
     {
         // Define a scaling factor to adjust the size of the arrows
-        const float scale_factor = 10.0f; // You can adjust this to get the desired arrow length
+        const float scale_factor = 90.0f; // You can adjust this to get the desired arrow length
 
         for (size_t i = 1uL; i <= AXIS_SIZE; i += 7) {
             for (size_t j = 1uL; j <= AXIS_SIZE; j += 7) {
@@ -215,7 +215,7 @@ public:
 
                 // Define points for the arrow
                 float arrow_length = r * scale_factor; // Scale the arrow based on velocity magnitude
-                float arrow_width = 3.0f; // Fixed width for the arrow body
+                float arrow_width = 40.0f; // Fixed width for the arrow body
 
                 sf::Vector2f point1(arrow_length, 0); // Tip of the arrow
                 sf::Vector2f point2(0, arrow_width); // Left-top corner of the body
