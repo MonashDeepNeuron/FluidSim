@@ -196,6 +196,7 @@ public:
     {
         // Define a scaling factor to adjust the size of the arrows
         const float scale_factor = 90.0f; // You can adjust this to get the desired arrow length
+        const float max_velocity_magnitude = 0.5f; // Define a maximum velocity magnitude
 
         for (size_t i = 1uL; i <= AXIS_SIZE; i += 7) {
             for (size_t j = 1uL; j <= AXIS_SIZE; j += 7) {
@@ -209,12 +210,17 @@ public:
                 auto r = std::sqrt((u * u) + (v * v)); // Magnitude of the velocity vector
                 auto theta = std::atan2(v, u); // Corrected direction of velocity, in radians
 
+                // Clamp the magnitude to the maximum threshold
+                if (r > max_velocity_magnitude) {
+                    r = max_velocity_magnitude; // Clamp to the max value
+                }
+
                 // Create the arrow shape
                 sf::ConvexShape arrow;
                 arrow.setPointCount(7); // Arrow with 7 points
 
                 // Define points for the arrow
-                float arrow_length = r * scale_factor; // Scale the arrow based on velocity magnitude
+                float arrow_length = r * scale_factor; // Scale the arrow based on clamped velocity magnitude
                 float arrow_width = 40.0f; // Fixed width for the arrow body
 
                 sf::Vector2f point1(arrow_length, 0); // Tip of the arrow
