@@ -1,0 +1,26 @@
+{
+  "name": "astro-fluid-sim",
+  "version-semver": "0.1.0",
+  "builtin-baseline": "962e5e39f8a25f42522f51fffc574e05a3efd26b",
+  "dependencies": [
+    {
+      "name": "fmt",
+      "version>=": "10.1.0"
+    },
+    {
+      "name": "sfml",
+      "version>=": "2.6.0#18"
+    }
+  ],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        {
+          "name": "catch2",
+          "version>=": "3.4.0"
+        }
+      ]
+    }
+  }
+}
