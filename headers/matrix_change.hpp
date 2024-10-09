@@ -155,21 +155,42 @@ private:
 
     void _M_set_bnd(int b, array_t<float>& arr)
     {
-
-        for (unsigned long int i = 1; i <= AXIS_SIZE; i++) {
-            arr[IX(0, i)] = b == 1 ? -arr[IX(1, i)] : arr[IX(1, i)];
-            arr[IX(AXIS_SIZE + 1, i)] = b == 1 ? -arr[IX(AXIS_SIZE, i)] : arr[IX(AXIS_SIZE, i)];
-            arr[IX(i, 0)] = b == 2 ? -arr[IX(i, 1)] : arr[IX(i, 1)];
-            arr[IX(i, AXIS_SIZE + 1)] = b == 2 ? -arr[IX(i, AXIS_SIZE)] : arr[IX(i, AXIS_SIZE)];
-
-            // Set the corners
-            arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
-            arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
-            arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
-            arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+ 
+        for ( int i=1 ; i<=AXIS_SIZE ; i++ ) {
+            arr[IX(0 ,i)] = b==1 ? -arr[IX(1,i)] : arr[IX(1,i)];
+            arr[IX(AXIS_SIZE+1,i)] = b==1 ? -arr[IX(AXIS_SIZE,i)] : arr[IX(AXIS_SIZE,i)];
+            arr[IX(i,0 )] = b==2 ? -arr[IX(i,1)] : arr[IX(i,1)];
+            arr[IX(i,AXIS_SIZE+1)] = b==2 ? -arr[IX(i,AXIS_SIZE)] : arr[IX(i,AXIS_SIZE)];
         }
+        // Set the corners
+        arr[IX(0, 0)] = 0.5f * (arr[IX(1, 0)] + arr[IX(0, 1)]);
+        arr[IX(0, AXIS_SIZE + 1)] = 0.5f * (arr[IX(1, AXIS_SIZE + 1)] + arr[IX(0, AXIS_SIZE)]);
+        arr[IX(AXIS_SIZE + 1, 0)] = 0.5f * (arr[IX(AXIS_SIZE, 0)] + arr[IX(AXIS_SIZE + 1, 1)]);
+        arr[IX(AXIS_SIZE + 1, AXIS_SIZE + 1)] = 0.5f * (arr[IX(AXIS_SIZE, AXIS_SIZE + 1)] + arr[IX(AXIS_SIZE + 1, AXIS_SIZE)]);
+
+        int rect_start = AXIS_SIZE / 4;
+        int rect_end = 3 * AXIS_SIZE / 4;
+
+        // Left and right sides of the rectangle
+        for (int i = rect_start; i <= rect_end; i++) {
+            arr[IX(rect_start, i)] = b == 1 ? -arr[IX(rect_start + 1, i)] : arr[IX(rect_start + 1, i)];
+            arr[IX(rect_end, i)] = b == 1 ? -arr[IX(rect_end - 1, i)] : arr[IX(rect_end - 1, i)];
+        }
+
+        // Top and bottom sides of the rectangle
+        for (int i = rect_start; i <= rect_end; i++) {
+            arr[IX(i, rect_start)] = b == 2 ? -arr[IX(i, rect_start + 1)] : arr[IX(i, rect_start + 1)];
+            arr[IX(i, rect_end)] = b == 2 ? -arr[IX(i, rect_end - 1)] : arr[IX(i, rect_end - 1)];
+        }
+
+        // Set the corners for the inner rectangle
+        arr[IX(rect_start, rect_start)] = 0.5f * (arr[IX(rect_start + 1, rect_start)] + arr[IX(rect_start, rect_start + 1)]);
+        arr[IX(rect_start, rect_end)] = 0.5f * (arr[IX(rect_start + 1, rect_end)] + arr[IX(rect_start, rect_end - 1)]);
+        arr[IX(rect_end, rect_start)] = 0.5f * (arr[IX(rect_end - 1, rect_start)] + arr[IX(rect_end, rect_start + 1)]);
+        arr[IX(rect_end, rect_end)] = 0.5f * (arr[IX(rect_end - 1, rect_end)] + arr[IX(rect_end, rect_end - 1)]);
+
+
     }
-    
 
     auto _M_diffuse() -> void
     {
