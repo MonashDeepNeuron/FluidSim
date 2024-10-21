@@ -20,6 +20,7 @@ Eulerian fluid simulation program based on the Navier-Stokes equation.
        libgl1-mesa-dev \
        libegl1-mesa-dev
    ```
+1. Create vspkg.json for you machine, a template has been provied vspkg_template.json. Simply copy paste this template to the new file
 1. Configure and build your project. Most popular IDEs support CMake projects with very little effort on your part.
 
    - [VS Code](https://code.visualstudio.com) via the [CMake extension](https://code.visualstudio.com/docs/cpp/cmake-linux)
