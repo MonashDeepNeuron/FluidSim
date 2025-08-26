@@ -2,6 +2,8 @@
 
 Eulerian fluid simulation program based on the Navier-Stokes equation.
 
+![Screenshot 2023-11-15 at 2 50 02 pm](https://github.com/user-attachments/assets/3e44e57f-58ed-49d5-bceb-23516f3823d8)
+
 ## How to Get Started with CMake
 
 1. Open [CMakeLists.txt](CMakeLists.txt). Rename the project and the executable to whatever name you want. The project and executable names don't have to match.
