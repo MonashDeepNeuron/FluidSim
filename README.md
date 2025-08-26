@@ -2,7 +2,7 @@
 
 Eulerian fluid simulation program based on the Navier-Stokes equation.
 
-![Screenshot 2023-11-15 at 2 50 02 pm](https://github.com/user-attachments/assets/3e44e57f-58ed-49d5-bceb-23516f3823d8)
+![fluidsim](https://github.com/user-attachments/assets/6b219df5-77a2-4f1c-822e-67c211c53d4b)
 
 ## How to Get Started with CMake
 
